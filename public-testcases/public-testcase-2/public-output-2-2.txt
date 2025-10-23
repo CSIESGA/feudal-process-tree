@@ -1,0 +1,492 @@
+WHY has granted ntkwkjn by himself.
+WHY_2022
+ntkwkjn_7978
+10000
+ntkwkjn does not have enough fiefdom to grant kdi.
+WHY_2022
+ntkwkjn_7978
+10000
+ntkwkjn has granted odtvwxd.
+WHY_2022
+ntkwkjn_6154
+odtvwxd_1824
+10000
+sfnbwumhgnzfoj does not exist in the kingdom.
+WHY_2022
+ntkwkjn_6154
+odtvwxd_1824
+10000
+odtvwxd has granted pq.
+WHY_2022
+ntkwkjn_6154
+odtvwxd_0291
+pq_1533
+10000
+odtvwxd has granted goxipgidjktugi.
+WHY_2022
+ntkwkjn_6154
+odtvwxd_0275
+pq_1533 goxipgidjktugi_0016
+10000
+pq has granted ombupq.
+WHY_2022
+ntkwkjn_6154
+odtvwxd_0275
+pq_0061 goxipgidjktugi_0016
+ombupq_1472
+10000
+WHY has granted uoxffnmfcz by himself.
+WHY_1242
+ntkwkjn_6154 uoxffnmfcz_0780
+odtvwxd_0275
+pq_0061 goxipgidjktugi_0016
+ombupq_1472
+10000
+goxipgidjktugi has granted f.
+WHY_1242
+ntkwkjn_6154 uoxffnmfcz_0780
+odtvwxd_0275
+pq_0061 goxipgidjktugi_0002
+ombupq_1472 f_0014
+10000
+goxipgidjktugi has granted zsmtk.
+WHY_1242
+ntkwkjn_6154 uoxffnmfcz_0780
+odtvwxd_0275
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0014 zsmtk_0001
+10000
+WHY has granted ydzlpnhe by himself.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0780 ydzlpnhe_0295
+odtvwxd_0275
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0014 zsmtk_0001
+10000
+qoa does not exist in the kingdom.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0780 ydzlpnhe_0295
+odtvwxd_0275
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0014 zsmtk_0001
+10000
+uoxffnmfcz has granted b.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0275 b_0588
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0014 zsmtk_0001
+10000
+f has granted lsnenlvqofwxv.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0275 b_0588
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0013 zsmtk_0001
+lsnenlvqofwxv_0001
+10000
+f has granted sfnbwumhgnzfoj.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0275 b_0588
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0005 zsmtk_0001
+lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+odtvwxd does not have enough fiefdom to grant rvvnszcgrmqudz.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0275 b_0588
+pq_0061 goxipgidjktugi_0001
+ombupq_1472 f_0005 zsmtk_0001
+lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+odtvwxd has granted neytebwifhwa.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0048
+ombupq_1472 f_0005 zsmtk_0001
+lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+ombupq has granted pxrmhuj.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0048
+ombupq_1090 f_0005 zsmtk_0001
+pxrmhuj_0382 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+neytebwifhwa has granted vfid.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0006
+ombupq_1090 f_0005 zsmtk_0001 vfid_0042
+pxrmhuj_0382 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+ombupq has granted orinzfnmvhd.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0006
+ombupq_0440 f_0005 zsmtk_0001 vfid_0042
+pxrmhuj_0382 orinzfnmvhd_0650 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+jnsedikoggqsmtq does not exist in the kingdom.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0006
+ombupq_0440 f_0005 zsmtk_0001 vfid_0042
+pxrmhuj_0382 orinzfnmvhd_0650 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+neytebwifhwa has granted xatdicaolhxnf.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0440 f_0005 zsmtk_0001 vfid_0042 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0650 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+goxipgidjktugi does not have enough fiefdom to grant jvzwbpv.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0440 f_0005 zsmtk_0001 vfid_0042 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0650 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+10000
+orinzfnmvhd has granted myuh.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0440 f_0005 zsmtk_0001 vfid_0042 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0031 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008
+myuh_0619
+10000
+vfid has granted uaqsakpysvgxry.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0440 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0031 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+myuh_0619
+10000
+ombupq has granted m.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0295
+odtvwxd_0227 b_0588
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0406 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0031 m_0034 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+myuh_0619
+10000
+ydzlpnhe has granted kfecxgnrdjk.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0056
+odtvwxd_0227 b_0588 kfecxgnrdjk_0239
+pq_0061 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0406 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0031 m_0034 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+myuh_0619
+10000
+pq has granted h.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0056
+odtvwxd_0227 b_0588 kfecxgnrdjk_0239
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0406 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0031 m_0034 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+myuh_0619
+10000
+ydzlpnhe has granted yfdvyxzyddiop.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0406 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0382 orinzfnmvhd_0031 m_0034 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+myuh_0619
+10000
+pxrmhuj has granted nbxgdmvrfbfzjou.
+WHY_0947
+ntkwkjn_6154 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0406 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0034 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619
+10000
+ntkwkjn has granted ewxitvitmbjka.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0406 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0034 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619
+10000
+ombupq has granted jnsedikoggqsmtq.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0034 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619
+10000
+hzsknvaak does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0034 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0008 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619
+10000
+sfnbwumhgnzfoj has granted ak.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0034 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 ak_0007
+10000
+m has granted xgnluhhmbxfi.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0038 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+pq has granted yaghswjh.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+orinzfnmvhd does not have enough fiefdom to grant lgvudjjaqnsimo.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+atomyfotahr does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+lsnenlvqofwxv does not have enough fiefdom to grant p.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+qoa does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+neytebwifhwa does not have enough fiefdom to grant xw.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+yfdvyxzyddiop does not have enough fiefdom to grant xw.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+ierrljzjwxlfycj does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+xw does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+sfnbwumhgnzfoj does not have enough fiefdom to grant lgvudjjaqnsimo.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+tumpjoamza does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+pxrmhuj does not have enough fiefdom to grant semdyc.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+neytebwifhwa does not have enough fiefdom to grant xw.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+lgvudjjaqnsimo does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+f does not have enough fiefdom to grant p.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+nbxgdmvrfbfzjou does not have enough fiefdom to grant xw.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+sowgpetwdytuq does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+p does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+vfid does not have enough fiefdom to grant jvzwbpv.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+xw does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+lsnenlvqofwxv does not have enough fiefdom to grant kdi.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+jm does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+xatdicaolhxnf does not have enough fiefdom to grant ubiqiprkic.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+hzsknvaak does not exist in the kingdom.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000
+kfecxgnrdjk does not have enough fiefdom to grant zsj.
+WHY_0947
+ntkwkjn_4517 uoxffnmfcz_0192 ydzlpnhe_0026
+odtvwxd_0227 ewxitvitmbjka_1637 b_0588 kfecxgnrdjk_0239 yfdvyxzyddiop_0030
+pq_0021 goxipgidjktugi_0001 neytebwifhwa_0005
+ombupq_0059 h_0023 yaghswjh_0017 f_0005 zsmtk_0001 vfid_0021 xatdicaolhxnf_0001
+pxrmhuj_0278 orinzfnmvhd_0031 m_0016 jnsedikoggqsmtq_0347 lsnenlvqofwxv_0001 sfnbwumhgnzfoj_0001 uaqsakpysvgxry_0021
+nbxgdmvrfbfzjou_0104 myuh_0619 xgnluhhmbxfi_0018 ak_0007
+10000

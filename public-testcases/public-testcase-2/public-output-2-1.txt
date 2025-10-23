@@ -1,0 +1,22 @@
+WHY has granted weedle by himself.
+weedle has granted kakuna.
+WHY has granted beedrill by himself.
+WHY_3000
+weedle_1000 beedrill_4000
+kakuna_2000
+10000
+kakuna has granted pidgey.
+kakuna_1983
+pidgey_0017
+2000
+raichu does not exist in the kingdom.
+WHY_3000
+weedle_1000 beedrill_4000
+kakuna_1983
+pidgey_0017
+10000
+weedle_1000
+kakuna_1983
+pidgey_0017
+3000
+WHY does not get any report from raichu

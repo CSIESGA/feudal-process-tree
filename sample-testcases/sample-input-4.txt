@@ -1,0 +1,17 @@
+Grant WHY eevee_9000
+Grant eevee vaporeon_2000
+Grant eevee jolteon_4000
+Grant WHY flareon_0500
+Grant flareon leafeon_0300
+Report WHY
+Revolt eevee
+Report WHY
+Revolt flareon
+Report WHY
+Grant WHY eevee_9000
+Grant eevee vaporeon_3000
+Grant vaporeon jolteon_5000
+Grant WHY flareon_0400
+Grant flareon leafeon_0500
+Revolt glaceon
+Revolt WHY

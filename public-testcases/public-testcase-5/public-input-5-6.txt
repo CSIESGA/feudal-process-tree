@@ -1,0 +1,44 @@
+Grant WHY eevee_1330
+Grant WHY sylveon_3000
+Grant sylveon umbreon_1970
+Grant WHY vaporeon_1968
+Grant vaporeon flareon_0136
+Grant umbreon espeon_1960
+Conquer vaporeon umbreon
+Grant WHY leafeon_4000
+Conquer leafeon sylveon
+Grant leafeon flareon_4000
+Conquer eevee glaceon
+Grant flareon sylveon_1000
+Grant leafeon glaceon_0500
+Conquer leafeon flareon
+Conquer leafeon glaceon
+Grant leafeon flareon_4000
+Grant flareon glaceon_2000
+Grant glaceon sylveon_1000
+Grant glaceon umbreon_1000
+Conquer leafeon glaceon
+Exchange eevee leafeon
+Conquer eevee leafeon
+Revolt leafeon
+Grant vaporeon umbreon
+Grant WHY sylveon_4999
+Grant WHY glaceon_4999
+Exchange sylveon glaceon
+Grant glaceon eevee_2001
+Grant glaceon leafeon_1999
+Exchange eevee leafeon
+Grant eevee umbreon_0500
+Grant eevee espeon_0500
+Exchange eevee espeon
+Exchange glaceon espeon
+Report WHY
+Grant sylveon flareon_2000
+Grant sylveon jolteon_2000
+Report WHY
+Conquer sylveon glaceon 
+Report WHY
+Grant WHY eevee_3000
+Grant WHY sylveon_3000
+Conquer eevee sylveon 
+Revolt WHY

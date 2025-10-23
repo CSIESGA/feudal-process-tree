@@ -1,0 +1,251 @@
+thm does not exist in the kingdom.
+WHY_10000
+0
+WHY has granted dxuhorseks by himself.
+WHY_4343
+dxuhorseks_5657
+10000
+dxuhorseks has granted thm.
+dxuhorseks_2267
+thm_3390
+5657
+dxuhorseks has granted rvxurccdmz.
+rvxurccdmz_0611
+611
+thm has granted axfh.
+rvxurccdmz_0611
+611
+thm does not have enough fiefdom to grant kyvlgdvuwgwm.
+thm_1151
+axfh_2239
+3390
+dxuhorseks has granted ohvufibyh.
+rvxurccdmz_0611
+611
+thm has granted tmn.
+axfh_2239
+2239
+WHY has granted byuxelv by himself.
+dxuhorseks_1265
+thm_0816 rvxurccdmz_0611 ohvufibyh_0391
+axfh_2239 tmn_0335
+5657
+rvxurccdmz has granted wot.
+thm_0816
+axfh_2239 tmn_0335
+3390
+dxuhorseks has granted uteqmwv.
+byuxelv_2878
+2878
+axfh has granted t.
+thm_0816
+axfh_0569 tmn_0335
+t_1670
+3390
+tmn does not have enough fiefdom to grant wmtmyliktdge.
+axfh_0569
+t_1670
+2239
+wot has granted raafostcmbnl.
+t_1670
+1670
+uteqmwv has granted clxtuhma.
+thm_0816
+axfh_0569 tmn_0335
+t_1670
+3390
+tmn has granted rvukgeu.
+clxtuhma_0164
+164
+uteqmwv has granted ebass.
+clxtuhma_0164
+164
+clxtuhma has granted qloejapmkucz.
+byuxelv_2878
+2878
+fljihhwdz does not exist in the kingdom.
+rvxurccdmz_0142
+wot_0056
+raafostcmbnl_0413
+611
+clxtuhma does not have enough fiefdom to grant udtxufu.
+thm_0816
+axfh_0569 tmn_0269
+t_1670 rvukgeu_0066
+3390
+rvukgeu has granted wdolmxalnd.
+rvxurccdmz_0142
+wot_0056
+raafostcmbnl_0413
+611
+tmn has granted pkyfsnfcg.
+t_1670
+1670
+qloejapmkucz has granted hwrgvmlr.
+WHY_1465
+dxuhorseks_1034 byuxelv_2878
+thm_0816 rvxurccdmz_0142 ohvufibyh_0391 uteqmwv_0031
+axfh_0569 tmn_0103 wot_0056 clxtuhma_0091 ebass_0036
+t_1670 rvukgeu_0034 pkyfsnfcg_0166 raafostcmbnl_0413 qloejapmkucz_0071
+wdolmxalnd_0032 hwrgvmlr_0002
+10000
+wot has granted somygfg.
+wot_0008
+raafostcmbnl_0413 somygfg_0048
+469
+ebass has granted wezambbxbmxyqu.
+ebass_0035
+wezambbxbmxyqu_0001
+36
+t does not have enough fiefdom to grant irylmppga.
+hwrgvmlr_0002
+2
+wot has granted anhchlhya.
+ebass_0035
+wezambbxbmxyqu_0001
+36
+byuxelv has granted dtmvdegc.
+qloejapmkucz_0071
+hwrgvmlr_0002
+73
+rorxzmtzh does not exist in the kingdom.
+pkyfsnfcg_0166
+166
+wdolmxalnd has granted v.
+ebass_0035
+wezambbxbmxyqu_0001
+36
+wdolmxalnd has granted vvqnkil.
+qloejapmkucz_0071
+hwrgvmlr_0002
+73
+hwrgvmlr has granted irylmppga.
+rvukgeu_0034
+wdolmxalnd_0009
+v_0007 vvqnkil_0016
+66
+t does not have enough fiefdom to grant fljihhwdz.
+v_0007
+7
+byuxelv has granted c.
+anhchlhya_0003
+3
+cgkbjwuo does not exist in the kingdom.
+byuxelv_0709
+dtmvdegc_1617 c_0552
+2878
+wot has granted wjvzzewlgunive.
+ohvufibyh_0391
+391
+wjvzzewlgunive has granted erzieu.
+axfh_0569
+t_1670
+2239
+somygfg has granted kyvlgdvuwgwm.
+raafostcmbnl_0413
+413
+sq does not exist in the kingdom.
+c_0552
+552
+wezambbxbmxyqu does not have enough fiefdom to grant vanrddysykaa.
+pkyfsnfcg_0166
+166
+kyvlgdvuwgwm does not have enough fiefdom to grant crkhpuxch.
+dxuhorseks_1034
+thm_0816 rvxurccdmz_0142 ohvufibyh_0391 uteqmwv_0031
+axfh_0569 tmn_0103 wot_0001 clxtuhma_0091 ebass_0035
+t_1670 rvukgeu_0034 pkyfsnfcg_0166 raafostcmbnl_0413 somygfg_0031 anhchlhya_0003 wjvzzewlgunive_0002 qloejapmkucz_0071 wezambbxbmxyqu_0001
+wdolmxalnd_0009 kyvlgdvuwgwm_0017 erzieu_0002 hwrgvmlr_0001
+v_0007 vvqnkil_0016 irylmppga_0001
+5657
+thm does not have enough fiefdom to grant hzsg.
+dtmvdegc_1617
+1617
+hzsg does not exist in the kingdom.
+v_0007
+7
+qloejapmkucz does not have enough fiefdom to grant dnctxyrday.
+thm_0816
+axfh_0569 tmn_0103
+t_1670 rvukgeu_0034 pkyfsnfcg_0166
+wdolmxalnd_0009
+v_0007 vvqnkil_0016
+3390
+wjvzzewlgunive does not have enough fiefdom to grant yspfmye.
+rvxurccdmz_0142
+wot_0001
+raafostcmbnl_0413 somygfg_0031 anhchlhya_0003 wjvzzewlgunive_0002
+kyvlgdvuwgwm_0017 erzieu_0002
+611
+dxuhorseks does not have enough fiefdom to grant yspfmye.
+v_0007
+7
+vanrddysykaa does not exist in the kingdom.
+clxtuhma_0091
+qloejapmkucz_0071
+hwrgvmlr_0001
+irylmppga_0001
+164
+v does not have enough fiefdom to grant xumhfgbgu.
+uteqmwv_0031
+clxtuhma_0091 ebass_0035
+qloejapmkucz_0071 wezambbxbmxyqu_0001
+hwrgvmlr_0001
+irylmppga_0001
+231
+ekdgp does not exist in the kingdom.
+wot_0001
+raafostcmbnl_0413 somygfg_0031 anhchlhya_0003 wjvzzewlgunive_0002
+kyvlgdvuwgwm_0017 erzieu_0002
+469
+c does not have enough fiefdom to grant wmtmyliktdge.
+axfh_0569
+t_1670
+2239
+rvukgeu does not have enough fiefdom to grant yspfmye.
+WHY_1465
+dxuhorseks_1034 byuxelv_0709
+thm_0816 rvxurccdmz_0142 ohvufibyh_0391 uteqmwv_0031 dtmvdegc_1617 c_0552
+axfh_0569 tmn_0103 wot_0001 clxtuhma_0091 ebass_0035
+t_1670 rvukgeu_0034 pkyfsnfcg_0166 raafostcmbnl_0413 somygfg_0031 anhchlhya_0003 wjvzzewlgunive_0002 qloejapmkucz_0071 wezambbxbmxyqu_0001
+wdolmxalnd_0009 kyvlgdvuwgwm_0017 erzieu_0002 hwrgvmlr_0001
+v_0007 vvqnkil_0016 irylmppga_0001
+10000
+rorxzmtzh does not exist in the kingdom.
+ohvufibyh_0391
+391
+jopwyvbnaxeaxwg does not exist in the kingdom.
+t_1670
+1670
+fljihhwdz does not exist in the kingdom.
+wdolmxalnd_0009
+v_0007 vvqnkil_0016
+32
+uteqmwv does not have enough fiefdom to grant rorxzmtzh.
+thm_0816
+axfh_0569 tmn_0103
+t_1670 rvukgeu_0034 pkyfsnfcg_0166
+wdolmxalnd_0009
+v_0007 vvqnkil_0016
+3390
+dtmvdegc does not have enough fiefdom to grant ycmhiammjg.
+raafostcmbnl_0413
+413
+kiyo does not exist in the kingdom.
+ohvufibyh_0391
+391
+kiyo does not exist in the kingdom.
+v_0007
+7
+axfh does not have enough fiefdom to grant vanrddysykaa.
+WHY_1465
+dxuhorseks_1034 byuxelv_0709
+thm_0816 rvxurccdmz_0142 ohvufibyh_0391 uteqmwv_0031 dtmvdegc_1617 c_0552
+axfh_0569 tmn_0103 wot_0001 clxtuhma_0091 ebass_0035
+t_1670 rvukgeu_0034 pkyfsnfcg_0166 raafostcmbnl_0413 somygfg_0031 anhchlhya_0003 wjvzzewlgunive_0002 qloejapmkucz_0071 wezambbxbmxyqu_0001
+wdolmxalnd_0009 kyvlgdvuwgwm_0017 erzieu_0002 hwrgvmlr_0001
+v_0007 vvqnkil_0016 irylmppga_0001
+10000
+vanrddysykaa does not exist in the kingdom.
+v_0007
+7

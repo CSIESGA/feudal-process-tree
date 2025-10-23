@@ -1,0 +1,25 @@
+Grant WHY eevee_9000
+Grant eevee vaporeon_2000
+Grant eevee jolteon_4000
+Grant WHY flareon_0500
+Grant flareon leafeon_0300
+Revolt eevee
+Revolt flareon
+Grant WHY eevee_9000
+Grant eevee vaporeon_3000
+Grant vaporeon jolteon_5000
+Grant WHY flareon_0400
+Grant flareon leafeon_0500
+Revolt glaceon
+Revolt eevee
+Revolt flareon
+Grant WHY pikachu_2000
+Grant pikachu ivysaur_1000
+Grant WHY charmander_3000
+Grant ivysaur venusaur_0500
+Grant squirtle wartortle_1000
+Grant venusaur butterfree_1000
+Revolt butterfree
+Revolt ivysaur
+Revolt flareon
+Revolt WHY

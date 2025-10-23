@@ -1,0 +1,57 @@
+WHY has granted eevee by himself.
+WHY has granted sylveon by himself.
+sylveon has granted umbreon.
+WHY has granted vaporeon by himself.
+vaporeon has granted flareon.
+umbreon has granted espeon.
+umbreon conquers vaporeon, grabbing 984 land
+WHY has granted leafeon by himself.
+leafeon conquers sylveon, grabbing 1992 land
+leafeon has granted flareon.
+Second lord glaceon does not exist in the kingdom.
+flareon has granted sylveon.
+leafeon has granted glaceon.
+leafeon conquers flareon, grabbing 2000 land
+leafeon conquers glaceon, grabbing 250 land
+leafeon has granted flareon.
+flareon has granted glaceon.
+glaceon has granted sylveon.
+glaceon does not have enough fiefdom to grant umbreon.
+leafeon conquers glaceon, grabbing 1000 land
+eevee and leafeon has exchanged their fief
+leafeon conquers eevee, grabbing 1496 land
+leafeon_2826
+flareon_3000
+5826
+vaporeon does not exist in the kingdom.
+WHY has granted sylveon by himself.
+WHY has granted glaceon by himself.
+sylveon and glaceon has exchanged their fief
+glaceon has granted eevee.
+glaceon has granted leafeon.
+eevee and leafeon has exchanged their fief
+eevee has granted umbreon.
+eevee has granted espeon.
+eevee and espeon has exchanged their fief
+glaceon and espeon has exchanged their fief
+WHY_0002
+sylveon_4999 glaceon_0999
+eevee_0500 leafeon_2001
+umbreon_0500 espeon_0999
+10000
+sylveon has granted flareon.
+sylveon has granted jolteon.
+WHY_0002
+sylveon_0999 glaceon_0999
+flareon_2000 jolteon_2000 eevee_0500 leafeon_2001
+umbreon_0500 espeon_0999
+10000
+Both side suffer, all lords died in the war.
+WHY_10000
+0
+WHY has granted eevee by himself.
+WHY has granted sylveon by himself.
+Both side suffer, all lords died in the war.
+WHY_10000
+0
+Congradulations! You've finished these tasks!

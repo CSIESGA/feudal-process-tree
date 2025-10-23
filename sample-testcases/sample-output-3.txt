@@ -1,0 +1,18 @@
+WHY has granted zapdos by himself.
+zapdos has granted moltres.
+zapdos has granted dratini.
+WHY has granted articuno by himself.
+articuno has granted dragonair.
+WHY has granted snorlax by himself.
+snorlax has granted gyarados.
+zapdos and snorlax has exchanged their fief
+zapdos and dragonair has exchanged their fief
+snorlax and gyarados has exchanged their fief
+zapdos and dratini has exchanged their fief
+First lord ditto does not exist in the kingdom.
+Both lords do not exist in the kingdom.
+First lord tauros does not exist in the kingdom.
+WHY_2000
+zapdos_0400 articuno_1500 snorlax_3000
+moltres_0300 dratini_0500 dragonair_2000 gyarados_0300
+10000

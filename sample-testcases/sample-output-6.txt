@@ -1,0 +1,18 @@
+WHY has granted eevee by himself.
+WHY has granted sylveon by himself.
+sylveon has granted umbreon.
+WHY has granted vaporeon by himself.
+vaporeon has granted flareon.
+umbreon has granted espeon.
+vaporeon has granted leafeon.
+sylveon has granted glaceon.
+WHY_3702
+eevee_1330 sylveon_0830 vaporeon_1812
+umbreon_0010 glaceon_0200 flareon_0136 leafeon_0020
+espeon_1960
+10000
+sylveon is the LCA for glaceon and espeon
+sylveon is the LCA for glaceon and sylveon
+First lord jolteon does not exist in the kingdom.
+WHY is the LCA for glaceon and leafeon
+umbreon is the LCA for umbreon and espeon

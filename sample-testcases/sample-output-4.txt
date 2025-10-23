@@ -1,0 +1,32 @@
+WHY has granted eevee by himself.
+eevee has granted vaporeon.
+eevee has granted jolteon.
+WHY has granted flareon by himself.
+flareon has granted leafeon.
+WHY_0500
+eevee_3000 flareon_0200
+vaporeon_2000 jolteon_4000 leafeon_0300
+10000
+eevee_3000
+vaporeon_2000 jolteon_4000
+9000
+WHY_9500
+flareon_0200
+leafeon_0300
+10000
+flareon_0200
+leafeon_0300
+500
+WHY_10000
+0
+WHY has granted eevee by himself.
+eevee has granted vaporeon.
+vaporeon does not have enough fiefdom to grant jolteon.
+WHY has granted flareon by himself.
+flareon does not have enough fiefdom to grant leafeon.
+glaceon does not exist in the kingdom.
+WHY_0600
+eevee_6000 flareon_0400
+vaporeon_3000
+10000
+Congradulations! You've finished these tasks!

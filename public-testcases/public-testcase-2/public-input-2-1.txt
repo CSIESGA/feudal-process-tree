@@ -1,0 +1,10 @@
+Grant WHY weedle_3000
+Grant weedle kakuna_2000
+Grant WHY beedrill_4000
+Report WHY
+Grant kakuna pidgey_0017
+Report kakuna
+Grant raichu jigglypuff_0018
+Report WHY
+Report weedle
+Report raichu

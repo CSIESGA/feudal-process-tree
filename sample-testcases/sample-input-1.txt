@@ -1,0 +1,6 @@
+Grant WHY pikachu_2000
+Grant pikachu ivysaur_1000
+Grant WHY charmander_3000
+Grant ivysaur venusaur_0500
+Grant squirtle wartortle_1000
+Grant venusaur butterfree_1000

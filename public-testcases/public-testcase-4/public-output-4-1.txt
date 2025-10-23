@@ -1,0 +1,37 @@
+WHY has granted eevee by himself.
+eevee has granted vaporeon.
+eevee has granted jolteon.
+WHY has granted flareon by himself.
+flareon has granted leafeon.
+eevee_3000
+vaporeon_2000 jolteon_4000
+9000
+flareon_0200
+leafeon_0300
+500
+WHY has granted eevee by himself.
+eevee has granted vaporeon.
+vaporeon does not have enough fiefdom to grant jolteon.
+WHY has granted flareon by himself.
+flareon does not have enough fiefdom to grant leafeon.
+glaceon does not exist in the kingdom.
+eevee_6000
+vaporeon_3000
+9000
+flareon_0400
+400
+WHY has granted pikachu by himself.
+pikachu has granted ivysaur.
+WHY has granted charmander by himself.
+ivysaur has granted venusaur.
+squirtle does not exist in the kingdom.
+venusaur does not have enough fiefdom to grant butterfree.
+butterfree does not exist in the kingdom.
+ivysaur_0500
+venusaur_0500
+1000
+flareon does not exist in the kingdom.
+WHY_5000
+pikachu_2000 charmander_3000
+10000
+Congradulations! You've finished these tasks!
