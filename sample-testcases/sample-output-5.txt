@@ -9,7 +9,7 @@ eevee_1330 sylveon_1030 vaporeon_1832
 umbreon_0010 flareon_0136
 espeon_1960
 10000
-umbreon conquers vaporeon, grabbing 984 land
+umbreon conquers vaporeon, grabbing 984 land.
 WHY_4686
 eevee_1330 sylveon_1030
 umbreon_0994
@@ -21,7 +21,7 @@ eevee_1330 sylveon_1030 leafeon_4000
 umbreon_0994
 espeon_1960
 10000
-leafeon conquers sylveon, grabbing 1992 land
+leafeon conquers sylveon, grabbing 1992 land.
 WHY_2678
 eevee_1330 leafeon_5992
 10000
@@ -47,12 +47,12 @@ eevee_1330 leafeon_1492
 flareon_3000 glaceon_0500
 sylveon_1000
 10000
-leafeon conquers flareon, grabbing 2000 land
+leafeon conquers flareon, grabbing 2000 land.
 WHY_2678
 eevee_1330 leafeon_5492
 glaceon_0500
 10000
-leafeon conquers glaceon, grabbing 250 land
+leafeon conquers glaceon, grabbing 250 land.
 WHY_2678
 eevee_1330 leafeon_5992
 10000
@@ -81,7 +81,7 @@ flareon_2000
 glaceon_1000
 sylveon_1000
 10000
-leafeon conquers glaceon, grabbing 1000 land
+leafeon conquers glaceon, grabbing 1000 land.
 WHY_2678
 eevee_1330 leafeon_2992
 flareon_3000

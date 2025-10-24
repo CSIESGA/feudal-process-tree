@@ -19,4 +19,4 @@ weedle_1000
 kakuna_1983
 pidgey_0017
 3000
-WHY does not get any report from raichu
+WHY does not get any report from raichu.
