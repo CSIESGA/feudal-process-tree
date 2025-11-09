@@ -24,4 +24,3 @@ typedef struct {
     char name[MAX_LORD_NAME_LEN];
     int fief_size;
 } Lord;
-

@@ -1,5 +1,10 @@
+CC = gcc
+CFLAGS = -Wall -O2
+
 all: monarch
+
 monarch: monarch.c hw2.h
-	// compile your monarch
+	$(CC) $(CFLAGS) monarch.c -o monarch
+
 clean:
-	// remove any executable or unnecessary file according to submit format
+	rm -f monarch
