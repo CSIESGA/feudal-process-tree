@@ -9,7 +9,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-#include <signal.h>
 #include <ctype.h>
 
 #include "hw2.h"
@@ -107,7 +106,7 @@ static void fully_write_str(int write_fd, const char *s) {
         }
         if (n == 0) { errno = EPIPE; return; }
         p += n;
-        left -= (size_t)n;
+        left -= n;
     }
     return;
 }
@@ -135,7 +134,6 @@ static void fully_read_str(int read_fd, char *buf, int maxlen) {
     for (;;) {
         char c;
         int n = read(read_fd, &c, 1);
-        // write(STDOUT_FILENO, &c, sizeof(c));
         if (n < 0) {                 // read 錯誤
             if (errno == EINTR) continue;
             if (i < maxlen) buf[i] = '\0';
@@ -209,25 +207,17 @@ static void children_push(pid_t pid, int read_fd, int write_fd, const char *name
     children_count++;
 }
 
-static ChildNode* children_find_by_name(const char *name) {
-    for (ChildNode *p=children_head; p; p=p->next) {
-        if (strcmp(p->L.name, name) == 0) 
-            return p;
-    }
-    return NULL;
-}
-
 // 在 Revolt/Conquer 後刪除 direct child 記錄
-static void children_remove_by_pid(pid_t pid) {
-    ChildNode **pp = &children_head;
+static void children_remove_by_pid(pid_t pid, int* childNum) {
+    ChildNode** pp = &children_head;
     while (*pp) {
         if ((*pp)->L.pid == pid) {
-            ChildNode *r = *pp;
+            ChildNode* r = *pp;
             *pp = r->next;
             close(r->L.read_fd);
             close(r->L.write_fd);
             free(r);
-            children_count--;
+            (*childNum)--;
             return;
         }
         pp = &((*pp)->next);
@@ -257,7 +247,6 @@ static void trim_newline(char *s) {
 }
 
 static void parse_command_line(const char *in, Parsed *out) {
-    // memset(out, 0, sizeof(Parsed));
     strncpy(out->raw, in, MAX_FULL_CMD_LEN);
     out->raw[MAX_FULL_CMD_LEN - 1] = '\0';
  
@@ -274,7 +263,7 @@ static void parse_command_line(const char *in, Parsed *out) {
         out->prefix[6] = '\0';
         out->has_prefix = true;
         p += 8;
-    } else if (isalpha(p[0]) && p[1] == '-' && strncmp(&p[2], "r-Rev-", 6) != 0 && strncmp(&p[2], "r-Rep-", 6) != 0) {
+    } else if (isalpha(p[0]) && p[1] == '-' && strncmp(p, "r-Rev-", 6) != 0 && strncmp(p, "r-Rep-", 6) != 0) {
         // 狀態前綴: "x-"
         out->status[0]=p[0]; 
         out->status[1]='-'; 
@@ -321,12 +310,107 @@ static void parse_command_line(const char *in, Parsed *out) {
 }
 
 //-------------------------------------
+// Subtree 組合：合併孩子回傳的子樹字串成多層
+//-------------------------------------
+
+// 把各 child 的 subtree 字串（以 '*' 分層）合併成父的 subtree
+// parent 第 0 層 = 自己；第 1 層 = 各 child 的第 0 層合併；以此類推
+// 這裡為了簡潔，用簡單的分割陣列（MAX_SUBTREE_LAYER=7, 每層用一個暫存字串拼接）
+static void merge_subtrees_and_print(const char *self_info, char childSubtrees[][MAX_SUBTREE_LEN], int childN, int* Val) {
+    // 把每個 child 的 subtree 分層拆解
+    // 層號：0..6
+    char layers[ MAX_SUBTREE_LAYER ][ MAX_SUBTREE_LEN ];
+    for (int i = 0; i < MAX_SUBTREE_LAYER; i++) 
+        layers[i][0]='\0';
+
+    // 第 0 層先放自己
+    strncpy(layers[0], self_info, MAX_SUBTREE_LEN);
+
+    // 計算總和：先把自己 fief 納入
+    int total = 0;
+    {
+        char name[MAX_LORD_NAME_LEN]; int v = 0;
+        split_lord_info(self_info, name, &v);
+        total += v;
+    }
+
+    // for 每個孩子：把其各層 append 到父的 +1 層（第0層會加到父第1層）
+    for (int c = 0; c < childN; ++c) {
+        // 先算孩子整棵的各層
+        char tmp[ MAX_SUBTREE_LEN ];
+        strncpy(tmp, childSubtrees[c], MAX_SUBTREE_LEN);
+        // 子樹總和：也可在另一通道回，但我們這裡直接解析
+        // 解析所有 <name_val>，逐一累加
+        {
+            char copySum[ MAX_SUBTREE_LEN ];
+            strncpy(copySum, childSubtrees[c], MAX_SUBTREE_LEN);
+            // 把 '*' 換成空白方便逐個 token
+            for (char* q = copySum; *q; ++q) 
+                if (*q == '*') 
+                    *q = ' ';
+            char* save = NULL;
+            char* tok = strtok_r(copySum, " ", &save);
+            while (tok) {
+                int v = 0; char nmm[MAX_LORD_NAME_LEN];
+                split_lord_info(tok, nmm, &v);
+                total += v;
+                tok = strtok_r(NULL, " ", &save);
+            }
+        }
+
+        // 分層合併
+        int layerIdx = 1;
+        char* save = NULL;
+        char* seg = strtok_r(tmp, "*", &save); // 第 0 層（孩子自己）
+        while (seg) {
+            // append 到對應父層：layers[layerIdx]
+            if (layers[layerIdx][0] != '\0') {
+                strncat(layers[layerIdx], " ", MAX_SUBTREE_LEN - strlen(layers[layerIdx]));
+            }
+            strncat(layers[layerIdx], seg, MAX_SUBTREE_LEN - strlen(layers[layerIdx]));
+            ++layerIdx;
+            seg = strtok_r(NULL, "*", &save);
+            if (layerIdx >= MAX_SUBTREE_LAYER) 
+                break;
+        }
+    }
+
+    // 依層列印（空層不印）
+    for (int i = 0; i < MAX_SUBTREE_LAYER; i++) {
+        if (layers[i][0] == '\0') 
+            break;
+        fprintf(stdout, "%s\n", layers[i]);
+    }
+    fprintf(stdout, "%d\n", total);
+    *Val = total;
+}
+
+//-------------------------------------
+// FIFO tools
+//-------------------------------------
+
+static int make_fifo_if_needed(const char* path) {
+    struct stat st;
+    if (stat(path, &st) == 0) {
+        if (!S_ISFIFO(st.st_mode)) {
+            // 存在但不是 FIFO，刪掉重建
+            unlink(path);
+        } else {
+            return 0; // already ok
+        }
+    }
+    if (mkfifo(path, 0666) < 0) {
+        if (errno != EEXIST) ERR_EXIT("mkfifo");
+    }
+    return 0;
+}
+
+//-------------------------------------
 // 主程式（每個行程都跑同一份 main）
 //-------------------------------------
 
 int main(int argc, char *argv[]) {
     setvbuf(stdout, NULL, _IONBF, 0); // prevent buffered I/O, equivalent to fflush() after each stdout, study this as you may need to do it for other nodes against their parents.
-    signal(SIGPIPE, SIG_IGN);          // ← 避免被 write() 直接打死
     if (argc != 2) {
         fprintf(stderr, "Usage: ./monarch [lord_info]\n");
         return 0;
@@ -356,18 +440,6 @@ int main(int argc, char *argv[]) {
         // 子節點的讀寫：已由 parent 在 exec 前安排
         // parent→child 在 child 端用 FD=3 讀；child→parent 用 FD=4 寫
     }
-    // printf("%s %d\n", me->name, me->fief_size);
-
-    // char buffer[20];
-    // int p2c[2];
-    // pipe(p2c);
-    
-    // // fully_read_str(p2c[0], buffer, 20);
-    // char line1[] = "hello hi\n";
-    // fully_write_str(p2c[1], line1);
-    // fully_read_str(p2c[0], buffer, 20);
-    // write(STDOUT_FILENO, buffer, 20);
-    // return 0;
     
     // 讀指令的來源：
     //  從 stdin 讀；其他節點從 FD=3（PARENT_READ_FD）讀
@@ -379,31 +451,22 @@ int main(int argc, char *argv[]) {
     while (1) {
         // 先宣告共用緩衝
         char line[MAX_FULL_CMD_LEN];  // 放指令（最後會是以 '\0' 結尾的 C-string）
-
-       
         
         // 1) 讀入一條「完整指令字串」
         if (is_WHY(me->name)) {
+            // root：從 stdin 讀到 '\n'
             if (!fgets(line, sizeof(line), stdin)) {
                 break; // EOF => 結束程式(或離開主迴圈)
             }
             int L = strlen(line);
+            // 去掉尾端 '\n'
             if (L > 0 && line[L-1] == '\n') 
                 line[L-1] = '\0';
-            // printf("%s\n", line);
             if (line[0] == '\0') 
                 continue; // 空行就略過
-            // // root：從 stdin 讀到 '\n'
-            // fgets(line, sizeof(line), stdin);
-            // // 去掉尾端 '\n'
-            // int L = strlen(line);
-            // if (L > 0 && line[L-1] == '\n') 
-            //     line[L-1] = '\0';
         } else {
             // child：從 FD=3 讀到 '\0'
-            // printf("test\n");
             fully_read_str(PARENT_READ_FD, line, MAX_FULL_CMD_LEN);
-            // printf("%s\n", line);
         }
 
         Parsed* P = calloc(1, sizeof(Parsed));
@@ -437,6 +500,12 @@ int main(int argc, char *argv[]) {
                     int p2c[2], c2p[2];
                     if (pipe(p2c)<0) ERR_EXIT("pipe p2c");
                     if (pipe(c2p)<0) ERR_EXIT("pipe c2p");
+                    if(p2c[0] == 3 || p2c[0] == 4 || p2c[1] == 3 || p2c[1] == 4){
+                        int temp1 = fcntl(p2c[0], F_DUPFD, 5);
+                        int temp2 = fcntl(p2c[1], F_DUPFD, 5);
+                        close(p2c[0]); close(p2c[1]);
+                        p2c[0] = temp1; p2c[1] = temp2;
+                    }
                     pid_t pid = fork();
                     if (pid < 0) ERR_EXIT("fork");
                     if (pid == 0) {
@@ -475,7 +544,6 @@ int main(int argc, char *argv[]) {
                     // 等子回覆一個 status：'a' 成功／已處理、'z' 未處理...
                     char st[MAX_STATUS_LEN];
                     fully_read_str(ch->L.read_fd, st, MAX_STATUS_LEN);
-                    // printf("read_success");
                     if (st[0] == 'a'){
                         success=true; found=true; 
                         break; 
@@ -499,360 +567,473 @@ int main(int argc, char *argv[]) {
                 fully_write_str(reply_write_fd, st);
             }
         }
+        
         // -----------------------------
         // (2) REPORT 與 r-Rep-Report
         // -----------------------------
-    //     else if (strcmp(P.cmd,"Report")==0) {
-    //         // 兩種情境：
-    //         //  - 原始 Report <X>
-    //         //  - r-Rep-Report <childName> 來自父親要求蒐子樹字串
-    //         bool is_recursive = (strncmp(P.prefix,"r-Rep-",6)==0);
 
-    //         char target[MAX_LORD_NAME_LEN]; strncpy(target, P.arg1, MAX_LORD_NAME_LEN);
+        else if (strcmp(P->cmd, "Report") == 0) {
+            // 兩種情境：
+            //  - 原始 Report <X>
+            //  - r-Rep-Report <childName> 來自父親要求蒐子樹字串
+            bool is_recursive = (strncmp(P->prefix, "r-Rep-", 6) == 0);
 
-    //         if (strcmp(me.name, target)==0) {
-    //             // 我就是要報告的根
-    //             // 收集每個直屬子女的 subtree 字串
-    //             char self_info[MAX_LORD_INFO_LEN]; join_lord_info(me.name, me.fief_size, self_info);
+            char target[MAX_LORD_NAME_LEN]; 
+            strncpy(target, P->arg1, MAX_LORD_NAME_LEN);
 
-    //             char childTrees[ MAX_CHILDREN_NUM ][ MAX_SUBTREE_LEN ];
-    //             int childN = 0;
+            if (strcmp(me->name, target) == 0) {
+                // 我就是要報告的根
+                // 收集每個直屬子女的 subtree 字串
+                char self_info[MAX_LORD_INFO_LEN];
+                join_lord_info(me->name, me->fief_size, self_info);
 
-    //             for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //                 // 要求 child 回傳 subtree
-    //                 // 發 r-Rep-Report <childName>
-    //                 char cmd[MAX_FULL_CMD_LEN];
-    //                 snprintf(cmd, sizeof(cmd), "r-Rep-Report %s", ch->L.name);
-    //                 fully_write(ch->L.write_fd, cmd, strlen(cmd)+1);
+                char childTrees[ MAX_CHILDREN_NUM ][ MAX_SUBTREE_LEN ];
+                int childNum = 0;
 
-    //                 // child 會回一整串 subtree（以 '\0' 結尾），長度上限 MAX_SUBTREE_LEN
-    //                 fully_read_cstr(ch->L.read_fd, childTrees[childN], MAX_SUBTREE_LEN);
-    //                 childN++;
-    //             }
+                for (ChildNode *ch = children_head; ch; ch = ch->next) {
+                    // 要求 child 回傳 subtree
+                    // 發 r-Rep-Report <childName>
+                    char cmd[MAX_FULL_CMD_LEN];
+                    snprintf(cmd, sizeof(cmd), "r-Rep-Report %s", ch->L.name);
+                    fully_write_str(ch->L.write_fd, cmd);
 
-    //             if (!is_recursive) {
-    //                 // 原始 Report：印層序 + 總和
-    //                 int total=0;
-    //                 merge_subtrees_and_print(self_info, childTrees, childN, &total);
-    //             }
+                    // child 會回一整串 subtree（以 '\0' 結尾），長度上限 MAX_SUBTREE_LEN
+                    fully_read_str(ch->L.read_fd, childTrees[childNum], MAX_SUBTREE_LEN);
+                    childNum++;
+                }
 
-    //             // 回覆父親用：把整棵子樹字串回傳（即使是原始 Report，也要把字串回給上一層，以便祖先合併或知道「找到」）
-    //             // 組字串：self 第0層 + 每個 childSubtree 的對應層
-    //             // 這裡重用 merge，但我們需要「不印，只產字串」：
-    //             // 簡便起見：直接按規格合成字串：
-    //             char out[MAX_SUBTREE_LEN];
-    //             // 先放第0層 self
-    //             strncpy(out, self_info, MAX_SUBTREE_LEN);
-    //             // 把 child 的第0層併成第1層
-    //             // 先抽取 child 第0層們
-    //             char layer1[MAX_SUBTREE_LEN]; layer1[0]='\0';
-    //             for (int iCh=0;iCh<childN;iCh++){
-    //                 char buf[MAX_SUBTREE_LEN]; strncpy(buf, childTrees[iCh], MAX_SUBTREE_LEN);
-    //                 // 第0層是第一段（遇到 '*' 前）
-    //                 char *star = strchr(buf, '*');
-    //                 if (star) *star = '\0';
-    //                 if (layer1[0] != '\0') strncat(layer1, " ", MAX_SUBTREE_LEN-1-strlen(layer1));
-    //                 strncat(layer1, buf, MAX_SUBTREE_LEN-1-strlen(layer1));
-    //             }
-    //             if (layer1[0] != '\0') {
-    //                 strncat(out, "*", MAX_SUBTREE_LEN-1-strlen(out));
-    //                 strncat(out, layer1, MAX_SUBTREE_LEN-1-strlen(out));
-    //             }
-    //             // 更深層（1..6）
-    //             for (int depth = 1; depth < MAX_SUBTREE_LAYER-1; ++depth) {
-    //                 char layer[MAX_SUBTREE_LEN]; layer[0]='\0';
-    //                 for (int iCh=0;iCh<childN;iCh++){
-    //                     // 取 childTrees[iCh] 的 第 depth 層
-    //                     char tmp[MAX_SUBTREE_LEN]; strncpy(tmp, childTrees[iCh], MAX_SUBTREE_LEN);
-    //                     int cur=0;
-    //                     char *save=NULL;
-    //                     char *seg = strtok_r(tmp, "*", &save);
-    //                     while (seg) {
-    //                         if (cur == depth) {
-    //                             if (layer[0] != '\0') strncat(layer, " ", MAX_SUBTREE_LEN-1-strlen(layer));
-    //                             strncat(layer, seg, MAX_SUBTREE_LEN-1-strlen(layer));
-    //                             break;
-    //                         }
-    //                         cur++;
-    //                         seg = strtok_r(NULL, "*", &save);
-    //                     }
-    //                 }
-    //                 if (layer[0] != '\0') {
-    //                     strncat(out, "*", MAX_SUBTREE_LEN-1-strlen(out));
-    //                     strncat(out, layer, MAX_SUBTREE_LEN-1-strlen(out));
-    //                 } else break;
-    //             }
+                if (!is_recursive) {
+                    // 原始 Report：印層序 + 總和
+                    int Val;
+                    merge_subtrees_and_print(self_info, childTrees, childNum, &Val);
+                    if (!is_WHY(me->name)){ 
+                        char status[] = "f";
+                        fully_write_str(reply_write_fd, status);
+                    }
+                    continue;
+                }
 
-    //             // 回傳：如果有父親（即我不是 WHY 或這是遞迴呼叫），就把 out 寫回去
-    //             if (!is_WHY(me.name) || is_recursive) {
-    //                 // 注意：即使 root 也可能在 r-Rep- 的鏈上作中繼（這裡統一回）
-    //                 int wfd = reply_write_fd;
-    //                 if (wfd >= 0) fully_write(wfd, out, strlen(out)+1);
-    //             }
-    //             // 若是原始 Report，已印完；繼續等下一指令
-    //             continue;
-    //         }
+                // 回覆父親用：把整棵子樹字串回傳（即使是原始 Report，也要把字串回給上一層，以便祖先合併或知道「找到」）
+                // 組字串：self 第0層 + 每個 childSubtree 的對應層
+                // 這裡重用 merge，但我們需要「不印，只產字串」：
+                // 簡便起見：直接按規格合成字串：
+                char out[MAX_SUBTREE_LEN];
+                // 先放第0層 self
+                strncpy(out, self_info, MAX_SUBTREE_LEN);
+                // 把 child 的第0層併成第1層
+                // 先抽取 child 第0層們
+                char layer1[MAX_SUBTREE_LEN]; layer1[0]='\0';
+                for (int iCh = 0; iCh < childNum; iCh++){
+                    char buf[MAX_SUBTREE_LEN]; strncpy(buf, childTrees[iCh], MAX_SUBTREE_LEN);
+                    // 第0層是第一段（遇到 '*' 前）
+                    char* star = strchr(buf, '*');
+                    if (star) 
+                        *star = '\0';
+                    if (layer1[0] != '\0')
+                        strncat(layer1, " ", MAX_SUBTREE_LEN - strlen(layer1));
+                    strncat(layer1, buf, MAX_SUBTREE_LEN - strlen(layer1));
+                }
+                if (layer1[0] != '\0') {
+                    strncat(out, "*", MAX_SUBTREE_LEN - strlen(out));
+                    strncat(out, layer1, MAX_SUBTREE_LEN - strlen(out));
+                }
+                // 更深層（1..6）
+                for (int depth = 1; depth < MAX_SUBTREE_LAYER - 1; ++depth) {
+                    char layer[MAX_SUBTREE_LEN]; layer[0]='\0';
+                    for (int iCh = 0; iCh < childNum; iCh++){
+                        // 取 childTrees[iCh] 的 第 depth 層
+                        char tmp[MAX_SUBTREE_LEN]; strncpy(tmp, childTrees[iCh], MAX_SUBTREE_LEN);
+                        int cur = 0;
+                        char* save = NULL;
+                        char* seg = strtok_r(tmp, "*", &save);
+                        while (seg) {
+                            if (cur == depth) {
+                                if (layer[0] != '\0')
+                                    strncat(layer, " ", MAX_SUBTREE_LEN - strlen(layer));
+                                strncat(layer, seg, MAX_SUBTREE_LEN - strlen(layer));
+                                break;
+                            }
+                            cur++;
+                            seg = strtok_r(NULL, "*", &save);
+                        }
+                    }
+                    if (layer[0] != '\0') {
+                        strncat(out, "*", MAX_SUBTREE_LEN - strlen(out));
+                        strncat(out, layer, MAX_SUBTREE_LEN - strlen(out));
+                    } else 
+                        break;
+                }
 
-    //         // 我不是目標：往子女傳，蒐狀態，若任何子回有子樹字串，就把字串原封回傳上一層（對遞迴情境）
-    //         bool found=false;
-    //         char received[MAX_SUBTREE_LEN]; received[0]='\0';
-    //         for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //             fully_write(ch->L.write_fd, line, strlen(line)+1);
-    //             // 對 Report 的遞迴呼叫，child 會回 subtree 字串（若不是目標分支可能回空？）
-    //             // 簡化：若 child 子樹沒有目標，child 直接回一個一字元狀態 'n'（我們在 child 那邊設計如此）
-    //             // 這裡容忍兩種：收到 1 byte status 或一整個 subtree 字串。
-    //             // 為了穩妥，我們先 peek 一下：規格裡沒提供 peek；因此統一規則：
-    //             // -> 子若沒找到，回 'n\0'（MAX_STATUS_LEN）
-    //             // -> 子若找到，回 subtree（以 '\0' 結尾且長度 >= 3）
-    //             char first[2]; fully_read_exact(ch->L.read_fd, first, 2);
-    //             if (first[0]=='n' && first[1]=='\0') {
-    //                 continue;
-    //             } else {
-    //                 // 這是 subtree 的第一兩個 byte，我們需要把剩下的也讀進來：
-    //                 received[0]=first[0]; received[1]=first[1];
-    //                 // 之後把剩下資料讀到 '\0'
-    //                 size_t k=2;
-    //                 while (k < sizeof(received)) {
-    //                     char c;
-    //                     ssize_t n=read(ch->L.read_fd, &c, 1);
-    //                     if (n<0){ if (errno==EINTR) continue; ERR_EXIT("read subtree"); }
-    //                     if (n==0){ break; }
-    //                     received[k++] = c;
-    //                     if (c=='\0') break;
-    //                 }
-    //                 found=true;
-    //                 break;
-    //             }
-    //         }
+                // 回傳：如果有父親（即我不是 WHY 或這是遞迴呼叫），就把 out 寫回去
+                // if (!is_WHY(me->name) || is_recursive) {
+                //     // 注意：即使 root 也可能在 r-Rep- 的鏈上作中繼（這裡統一回）
+                //     fully_write_str(reply_write_fd, out);
+                // }
+                fully_write_str(reply_write_fd, out);
+                // 若是原始 Report，已印完；繼續等下一指令
+                continue;
+            }
 
-    //         if (!found) {
-    //             if (is_WHY(me.name) && !is_recursive) {
-    //                 // 原始 Report 並且找不到
-    //                 print_fail_report(target);
-    //             }
-    //             // 回上一層（若有）：'n'
-    //             if (!is_WHY(me.name)) {
-    //                 char st[2]={'n','\0'};
-    //                 fully_write(reply_write_fd, st, 2);
-    //             }
-    //         } else {
-    //             // 把 subtree 傳回上一層
-    //             if (!is_WHY(me.name)) {
-    //                 fully_write(reply_write_fd, received, strlen(received)+1);
-    //             } else {
-    //                 // 我是 WHY 但不是目標（理論上不會走到，因為 Report 目標可能不是 WHY）；保守不印。
-    //             }
-    //         }
-    //     }
-    //     // -----------------------------
-    //     // (3) EXCHANGE（必用 FIFO）
-    //     // -----------------------------
-    //     else if (strcmp(P.cmd,"Exchange")==0) {
-    //         // Root 先建立 FIFO；非 root 直接依據兩名字決定自己的角色（A或B或非目標）
-    //         char A[MAX_LORD_NAME_LEN], B[MAX_LORD_NAME_LEN];
-    //         strncpy(A, P.arg1, MAX_LORD_NAME_LEN);
-    //         strncpy(B, P.arg2, MAX_LORD_NAME_LEN);
+            // 我不是目標：往子女傳，蒐狀態，若任何子回有子樹字串，就把字串原封回傳上一層（對遞迴情境）
+            bool found = false;
+            // char received[MAX_SUBTREE_LEN]; received[0] = '\0';
+            for (ChildNode *ch = children_head; ch; ch = ch->next) {
+                fully_write_str(ch->L.write_fd, line);
+                // 對 Report 的遞迴呼叫，child 會回 subtree 字串（若不是目標分支可能回空？）
+                // 簡化：若 child 子樹沒有目標，child 直接回一個一字元狀態 'n'（我們在 child 那邊設計如此）
+                // 這裡容忍兩種：收到 1 byte status 或一整個 subtree 字串。
+                // 為了穩妥，我們先 peek 一下：規格裡沒提供 peek；因此統一規則：
+                // -> 子若沒找到，回 'n\0'（MAX_STATUS_LEN）
+                // -> 子若找到，回 subtree（以 '\0' 結尾且長度 >= 3）
+                char first[2]; fully_read_str(ch->L.read_fd, first, 2);
+                if (first[0] == 'n' && first[1] == '\0') {
+                    continue;
+                } else if (first[0] == 'f' && first[1] == '\0') {
+                    found = true;
+                    if (!is_WHY(me->name)){
+                        char status[] = "f";
+                        fully_write_str(reply_write_fd, status);
+                    }
+                    break;
+                    // // 這是 subtree 的第一兩個 byte，我們需要把剩下的也讀進來：
+                    // received[0]=first[0]; received[1]=first[1];
+                    // // 之後把剩下資料讀到 '\0'
+                    // size_t k=2;
+                    // while (k < sizeof(received)) {
+                    //     char c;
+                    //     ssize_t n=read(ch->L.read_fd, &c, 1);
+                    //     if (n<0){ if (errno==EINTR) continue; ERR_EXIT("read subtree"); }
+                    //     if (n==0){ break; }
+                    //     received[k++] = c;
+                    //     if (c=='\0') break;
+                    // }
+                    // found=true;
+                    // break;
+                }
+            }
 
-    //         char fifoAB[64], fifoBA[64];
-    //         snprintf(fifoAB, sizeof(fifoAB), "%s2%s.fifo", A, B);
-    //         snprintf(fifoBA, sizeof(fifoBA), "%s2%s.fifo", B, A);
+            if(is_WHY(me->name) && !found){
+                print_fail_report(target);
+                continue;
+            }
+                
+            
+            if (!found){
+                char status[] = "n";
+                fully_write_str(reply_write_fd, status);
+                continue;
+            }
+            // if (!found) {
+            //     if (is_WHY(me->name) && !is_recursive) {
+            //         // 原始 Report 並且找不到
+            //         print_fail_report(target);
+            //     }
+            //     // 回上一層（若有）：'n'
+            //     if (!is_WHY(me->name)) {
+            //         char st[2]={'n','\0'};
+            //         fully_write_str(reply_write_fd, st);
+            //     }
+            // } else {
+            //     // 把 subtree 傳回上一層
+            //     if (!is_WHY(me->name)) {
+            //         fully_write_str(reply_write_fd, received);
+            //     } else {
+            //         // 我是 WHY 但不是目標（理論上不會走到，因為 Report 目標可能不是 WHY）；保守不印。
+            //     }
+            // }
+        }
 
-    //         bool existA=false, existB=false;
+        // -----------------------------
+        // (3) EXCHANGE（必用 FIFO）
+        // -----------------------------
 
-    //         if (is_WHY(me.name)) {
-    //             make_fifo_if_needed(fifoAB);
-    //             make_fifo_if_needed(fifoBA);
-    //         }
+        else if (strcmp(P->cmd, "Exchange") == 0) {
+            // Root 先建立 FIFO；非 root 直接依據兩名字決定自己的角色（A或B或非目標）
+            char A[MAX_LORD_NAME_LEN], B[MAX_LORD_NAME_LEN];
+            strncpy(A, P->arg1, MAX_LORD_NAME_LEN);
+            strncpy(B, P->arg2, MAX_LORD_NAME_LEN);
 
-    //         // 判斷自己是否目標
-    //         bool iAmA = (strcmp(me.name, A)==0);
-    //         bool iAmB = (strcmp(me.name, B)==0);
+            char fifoAB[64], fifoBA[64];
+            snprintf(fifoAB, sizeof(fifoAB), "/tmp/%s2%s.fifo", A, B);
+            snprintf(fifoBA, sizeof(fifoBA), "/tmp/%s2%s.fifo", B, A);
 
-    //         if (iAmA || iAmB) {
-    //             // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
-    //             // A 寫 A2B，讀 B2A；B 則相反
-    //             const char *outF = iAmA ? fifoAB : fifoBA;
-    //             const char *inF  = iAmA ? fifoBA : fifoAB;
+            bool existA = false, existB = false;
 
-    //             // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
-    //             // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：
-    //             int in_fd  = open(inF,  O_RDONLY); if (in_fd<0) ERR_EXIT("open inF");
-    //             int out_fd = open(outF, O_WRONLY); if (out_fd<0) ERR_EXIT("open outF");
+            if (is_WHY(me->name)) {
+                make_fifo_if_needed(fifoAB);
+                make_fifo_if_needed(fifoBA);
+            }
 
-    //             // 寫自己的 fief
-    //             char my4[FIEF_SIZE_LEN]; i2fief4(me.fief_size, my4);
-    //             fully_write(out_fd, my4, FIEF_SIZE_LEN);
+            // 判斷自己是否目標
+            bool i_am_A = (strcmp(me->name, A) == 0);
+            bool i_am_B = (strcmp(me->name, B) == 0);
+            // printf("success check 1");
 
-    //             // 讀對方的 fief
-    //             char peer4[FIEF_SIZE_LEN]; fully_read_exact(in_fd, peer4, FIEF_SIZE_LEN);
-    //             int peerVal = atoi(peer4);
+            if (i_am_A || i_am_B) {
+                if (!is_WHY(me->name) && i_am_A) {
+                    char st[2]={'a','\0'}; 
+                    fully_write_str(reply_write_fd, st);
+                } else if (!is_WHY(me->name) && i_am_B) {
+                    char st[2]={'b','\0'}; 
+                    fully_write_str(reply_write_fd, st);
+                                  }
+                // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
+                // A 寫 A2B，讀 B2A；B 則相反
+                const char* write_out = i_am_A ? fifoAB : fifoBA;
+                const char* read_in  = i_am_A ? fifoBA : fifoAB;
 
-    //             // 交換：把自己的改成對方的
-    //             me.fief_size = peerVal;
+                // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
+                // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：
+                int read_in_fd, write_out_fd;
+                if (i_am_A) {
+                    read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
+                    write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");
+                } else {
+                    write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");
+                    read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
+                }
+                
+                // 寫自己的 fief
+                char my_fief[FIEF_SIZE_LEN]; int2fief(me->fief_size, my_fief);
+                fully_write_str(write_out_fd, my_fief);
+                // 讀對方的 fief
+                char your_fief[FIEF_SIZE_LEN]; 
+                fully_read_str(read_in_fd, your_fief, FIEF_SIZE_LEN);
+                int your_Val = atoi(your_fief);
 
-    //             close(in_fd); close(out_fd);
+                // 交換：把自己的改成對方的
+                me->fief_size = your_Val;
 
-    //             // 回覆父：'a'
-    //             if (!is_WHY(me.name)) {
-    //                 char st[2]={'a','\0'}; fully_write(reply_write_fd, st, 2);
-    //             }
-    //             // 上傳存在性給 WHY（在廣播搜集流程中實現）
-    //         } else {
-    //             // 我不是目標：把指令往孩子廣播，收集兩側存在性與成功狀態
-    //             int haveA=0, haveB=0, okA=0, okB=0;
-    //             for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //                 fully_write(ch->L.write_fd, line, strlen(line)+1);
-    //                 // 子若是 A 或 B 會回 'a'（完成交換動作）
-    //                 // 若不是目標但找到某目標存在，可能回 'b' or 'c' 之類；我們這裡簡化：回 'n' 不存在／'a' 有處理
-    //                 char st[2]; fully_read_exact(ch->L.read_fd, st, 2);
-    //                 if (st[0]=='a') {
-    //                     // 有處理成功的一支
-    //                     // 這裡無從得知是 A 還是 B，但不重要；繼續等另一支
-    //                     // 我們會把這狀態向上回傳 'a' 表示某支成功
-    //                     if (!okA) okA=1; else okB=1;
-    //                 } else if (st[0]=='b') haveA=1;
-    //                 else if (st[0]=='c') haveB=1;
-    //                 // 其他視為該分支無
-    //             }
+                close(read_in_fd); close(write_out_fd);
 
-    //             // WHY 統一印訊息：因為只有 WHY 會知道兩邊都完成與否
-    //             if (!is_WHY(me.name)) {
-    //                 char st[2]={'n','\0'};
-    //                 fully_write(reply_write_fd, st, 2);
-    //             }
-    //         }
+                // 回覆父：'a'
+                
+                // 上傳存在性給 WHY（在廣播搜集流程中實現）
+            } else {
+                // 我不是目標：把指令往孩子廣播，收集兩側存在性與成功狀態
+                bool haveA = false, haveB = false;
+                for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                    fully_write_str(ch->L.write_fd, line);
+                    // 子若是 A 或 B 會回 'a'（完成交換動作）
+                    // 若不是目標但找到某目標存在，可能回 'b' or 'c' 之類；我們這裡簡化：回 'n' 不存在／'a' 有處理
+                    char st[2]; fully_read_str(ch->L.read_fd, st, 2);
+                    // if (st[0] == 'a') {
+                    //     // 有處理成功的一支
+                    //     // 這裡無從得知是 A 還是 B，但不重要；繼續等另一支
+                    //     // 我們會把這狀態向上回傳 'a' 表示某支成功
+                    //     if (!okA) okA=1; else okB=1;
+                    // } else if (st[0]=='b') haveA=1;
+                    // else if (st[0]=='c') haveB=1;
+                    if (st[0] == 'a') {
+                        haveA = true;
+                    } else if (st[0] == 'b') {
+                        haveB = true;
+                    } else if (st[0] == 'c'){
+                        haveA = true;
+                        haveB = true;
+                    }
+                    // 其他視為該分支無
+                }
 
-    //         if (is_WHY(me.name)) {
-    //             // WHY 這裡簡化：再從孩子收集「存在性」不如在前序廣播時由孩子回 'b'/'c'；
-    //             // 為了清楚，我們做一輪「存在性確認」：
-    //             bool seenA=false, seenB=false, okCnt=0;
+                // WHY 統一印訊息：因為只有 WHY 會知道兩邊都完成與否
+                // if (!is_WHY(me.name)) {
+                //     char st[2]={'n','\0'};
+                //     fully_write(reply_write_fd, st, 2);
+                // }
+                if (!is_WHY(me->name)) {
+                    if (haveA && haveB) {
+                        char st[2] = {'c','\0'};
+                        fully_write_str(reply_write_fd, st);
+                    } else if (haveA) {
+                        char st[2] = {'a','\0'};
+                        fully_write_str(reply_write_fd, st);
+                    } else if (haveB) {
+                        char st[2] = {'b','\0'};
+                        fully_write_str(reply_write_fd, st);
+                    }
+                }
 
-    //             // 自己可能是 A/B 嗎？規格保證不會（A/B 非 WHY）
-    //             (void)okCnt;
+                if (is_WHY(me->name)) {
+                    if (haveA && haveB) {
+                        print_success_exchange(A, B);
+                    } else if (haveA) {
+                        print_fail_target_1(B);
+                    } else if (haveB) {
+                        print_fail_target_0(A);
+                    } else {
+                        print_fail_target_both();
+                    } 
+                    // unlink(fifoAB); unlink(fifoBA);
+                }
+            }
 
-    //             // 從直屬孩子再來一次 ping（更簡易方法：在第一次廣播就收狀態；為篇幅保守，這裡略化）
-    //             // 這裡我們直接用 children_find_by_name 快查：如果 A/B 是直屬就算存在
-    //             if (children_find_by_name(A)) seenA=true;
-    //             if (children_find_by_name(B)) seenB=true;
+            // if (is_WHY(me.name)) {
+            //     // WHY 這裡簡化：再從孩子收集「存在性」不如在前序廣播時由孩子回 'b'/'c'；
+            //     // 為了清楚，我們做一輪「存在性確認」：
+            //     bool seenA=false, seenB=false, okCnt=0;
 
-    //             // 若直屬未命中，仍可能在更深處；這需要在前面的廣播就蒐集 'b'/'c'。
-    //             // 為了把訊息確實印出：我們保守地依據是否最終兩端的交換回覆成功來判斷有無（簡易版）：
-    //             // ——實作簡化：只要兩端有任何一端成功執行交換步驟，就視為存在。
-    //             // 最穩：我們實務上在廣播時讓每個分支都把「是否含 A / 是否含 B」回一個字元上來，但上面為節省篇幅做了'n'/'a'。
-    //             // 這裡退一步：若兩端都沒回到 ANY 'a'，我們判定兩者皆不存在；若只回到一個 'a'，則另一個不存在。
-    //             // 因課規測資保證 A/B不同且非WHY，我們仍需把訊息印對。
-    //             // ——為了確保正確，這裡直接用 FIFO 打開測法：若某 FIFO open 失敗通常代表對側沒 open，但這不可靠。
-    //             // 結論：**建議你實際寫 code 時，把存在性回傳做好（'b'=含A，'c'=含B）。** 下方印訊息保持標準格式。
+            //     // 自己可能是 A/B 嗎？規格保證不會（A/B 非 WHY）
+            //     (void)okCnt;
 
-    //             // 這裡直接印「成功交換」：在我們的 above 分支中，只有目標自己會回 'a'；WHY 並未真正統計。
-    //             // 為了交付一版可理解的範本，我們此處按規格流程：先清理 FIFO，再不印多餘東西（或依需求調整）。
-    //             unlink(fifoAB); unlink(fifoBA);
-    //             // 真正的「存在性收集 + 印三種錯誤」在完整版建議你把 'b'/'c' 狀態做完（篇幅關係此處簡化）。
-    //         }
-    //     }
-    //     // -----------------------------
-    //     // (4) REVOLT 與 r-Rev-*
-    //     // -----------------------------
-    //     else if (strcmp(P.cmd,"Revolt")==0) {
-    //         char target[MAX_LORD_NAME_LEN]; strncpy(target, P.arg1, MAX_LORD_NAME_LEN);
-    //         bool is_recursive = (strncmp(P.prefix,"r-Rev-",6)==0);
+            //     // 從直屬孩子再來一次 ping（更簡易方法：在第一次廣播就收狀態；為篇幅保守，這裡略化）
+            //     // 這裡我們直接用 children_find_by_name 快查：如果 A/B 是直屬就算存在
+            //     if (children_find_by_name(A)) seenA=true;
+            //     if (children_find_by_name(B)) seenB=true;
 
-    //         if (strcmp(me.name, target)==0) {
-    //             // 先 Report（印）
-    //             // 我們直接重發一個「本地」Report 指令，重用上面的邏輯（不走 pipe）：
-    //             {
-    //                 char rep[MAX_FULL_CMD_LEN];
-    //                 snprintf(rep, sizeof(rep), "Report %s", me.name);
-    //                 Parsed PP; parse_command_line(rep, &PP);
-    //                 // 模擬 call：直接進該分支（把 code 封成函式會比較漂亮，但為了不變更名稱這裡 inline）
-    //                 // == 這裡偷懶法：直接再次組 subtree 並印（與 Report 分支同樣程式），為節省篇幅不重貼；
-    //                 // 在正式作業你可把 Report 寫成函式供這裡呼叫。
-    //             }
+            //     // 若直屬未命中，仍可能在更深處；這需要在前面的廣播就蒐集 'b'/'c'。
+            //     // 為了把訊息確實印出：我們保守地依據是否最終兩端的交換回覆成功來判斷有無（簡易版）：
+            //     // ——實作簡化：只要兩端有任何一端成功執行交換步驟，就視為存在。
+            //     // 最穩：我們實務上在廣播時讓每個分支都把「是否含 A / 是否含 B」回一個字元上來，但上面為節省篇幅做了'n'/'a'。
+            //     // 這裡退一步：若兩端都沒回到 ANY 'a'，我們判定兩者皆不存在；若只回到一個 'a'，則另一個不存在。
+            //     // 因課規測資保證 A/B不同且非WHY，我們仍需把訊息印對。
+            //     // ——為了確保正確，這裡直接用 FIFO 打開測法：若某 FIFO open 失敗通常代表對側沒 open，但這不可靠。
+            //     // 結論：**建議你實際寫 code 時，把存在性回傳做好（'b'=含A，'c'=含B）。** 下方印訊息保持標準格式。
 
-    //             // 再遞迴關閉整棵子樹：對每個 child 發 r-Rev-Revolt <childName>
-    //             int total = me.fief_size;
-    //             for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //                 char cmd[MAX_FULL_CMD_LEN];
-    //                 snprintf(cmd, sizeof(cmd), "r-Rev-Revolt %s", ch->L.name);
-    //                 fully_write(ch->L.write_fd, cmd, strlen(cmd)+1);
+            //     // 這裡直接印「成功交換」：在我們的 above 分支中，只有目標自己會回 'a'；WHY 並未真正統計。
+            //     // 為了交付一版可理解的範本，我們此處按規格流程：先清理 FIFO，再不印多餘東西（或依需求調整）。
+            //     unlink(fifoAB); unlink(fifoBA);
+            //     // 真正的「存在性收集 + 印三種錯誤」在完整版建議你把 'b'/'c' 狀態做完（篇幅關係此處簡化）。
+            // }
+        }
 
-    //                 // child 回傳其整棵子樹總和（用固定5 bytes fief格式回？→ 規格允許 child→parent 傳 fief）
-    //                 // 我們這裡用固定 5 bytes
-    //                 char sum4[FIEF_SIZE_LEN]; fully_read_exact(ch->L.read_fd, sum4, FIEF_SIZE_LEN);
-    //                 total += atoi(sum4);
+        // -----------------------------
+        // (4) REVOLT 與 r-Rev-*
+        // -----------------------------
+        
+        else if (strcmp(P->cmd, "Revolt") == 0) {
+            char target[MAX_LORD_NAME_LEN]; strncpy(target, P->arg1, MAX_LORD_NAME_LEN);
+            bool is_recursive = (strncmp(P->prefix, "r-Rev-", 6) == 0);
+            int Value_sum;
+ 
+            if (strcmp(me->name, target) == 0) {
+                if (!is_recursive) {
+                    char self_info[MAX_LORD_INFO_LEN];
+                    join_lord_info(me->name, me->fief_size, self_info);
 
-    //                 // 回收 child
-    //                 int status=0; waitpid(ch->L.pid, &status, 0);
-    //                 close(ch->L.read_fd); close(ch->L.write_fd);
-    //             }
-    //             // 清空 children list
-    //             while (children_head) {
-    //                 ChildNode *tmp=children_head->next;
-    //                 free(children_head);
-    //                 children_head=tmp;
-    //             }
-    //             children_count=0;
+                    char childTrees[ MAX_CHILDREN_NUM ][ MAX_SUBTREE_LEN ];
+                    int childNum = 0;
 
-    //             // 把 total 回傳給父親（若有）
-    //             if (!is_WHY(me.name)) {
-    //                 char sum4[FIEF_SIZE_LEN]; i2fief4(total, sum4);
-    //                 fully_write(reply_write_fd, sum4, FIEF_SIZE_LEN);
-    //                 // 自己退出
-    //                 _exit(0);
-    //             } else {
-    //                 // Revolt WHY：印結束訊息並結束
-    //                 print_finish();
-    //                 _exit(0);
-    //             }
-    //         }
+                    for (ChildNode *ch = children_head; ch; ch = ch->next) {
+                        // 要求 child 回傳 subtree
+                        // 發 r-Rep-Report <childName>
+                        char cmd[MAX_FULL_CMD_LEN];
+                        snprintf(cmd, sizeof(cmd), "r-Rep-Report %s", ch->L.name);
+                        fully_write_str(ch->L.write_fd, cmd);
 
-    //         // 我不是目標：往子女傳
-    //         bool found=false;
-    //         for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //             fully_write(ch->L.write_fd, line, strlen(line)+1);
-    //             // child 若不是目標，會繼續傳；如果 target 在其子樹，他最終會把 sum4 回上來（遞迴路徑）
-    //             // 如果 target 不在其子樹，他回 'n'（STATUS）
-    //             // 這裡我們容忍兩種：先讀兩 bytes看是不是 'n\0'，不是的話就當作 sum4，其餘用 exact 讀
-    //             char first2[2]; fully_read_exact(ch->L.read_fd, first2, 2);
-    //             if (first2[0]=='n' && first2[1]=='\0') {
-    //                 continue; // 該分支沒有
-    //             } else {
-    //                 // 是總和的前兩個 byte
-    //                 char sum4[FIEF_SIZE_LEN]; sum4[0]=first2[0]; sum4[1]=first2[1];
-    //                 fully_read_exact(ch->L.read_fd, sum4+2, FIEF_SIZE_LEN-2);
-    //                 int add = atoi(sum4);
-    //                 // 該 sum 應加回「child 的父親」（也就是我）
-    //                 me.fief_size += add;
+                        // child 會回一整串 subtree（以 '\0' 結尾），長度上限 MAX_SUBTREE_LEN
+                        fully_read_str(ch->L.read_fd, childTrees[childNum], MAX_SUBTREE_LEN);
+                        childNum++;
+                    }
 
-    //                 // 目標 child 已經終止，這裡要 wait 它（但不是我的直屬？→ 是沿鏈路上來的 direct child）
-    //                 int status=0; waitpid(ch->L.pid, &status, 0);
-    //                 close(ch->L.read_fd); close(ch->L.write_fd);
-    //                 children_remove_by_pid(ch->L.pid); // 從 list 移除
-    //                 found=true;
-    //                 break;
-    //             }
-    //         }
+                    merge_subtrees_and_print(self_info, childTrees, childNum, &Value_sum);
+                }
+            
+                // 再遞迴關閉整棵子樹：對每個 child 發 r-Rev-Revolt <childName>
+                for (ChildNode *ch = children_head; ch; ch = ch->next) {
+                    char cmd[MAX_FULL_CMD_LEN];
+                    snprintf(cmd, sizeof(cmd), "r-Rev-Revolt %s", ch->L.name);
+                    fully_write_str(ch->L.write_fd, cmd);
 
-    //         if (!found) {
-    //             if (is_WHY(me.name) && !is_recursive) {
-    //                 // 找不到
-    //                 print_fail_not_exist(target);
-    //             }
-    //             // 回報 'n'
-    //             if (!is_WHY(me.name)) {
-    //                 char st[2]={'n','\0'}; fully_write(reply_write_fd, st, 2);
-    //             }
-    //         } else {
-    //             // 我收到 sum 並完成加回，如果我也被 r-Rev- 要結束，會在上層處理
-    //             if (!is_WHY(me.name)) {
-    //                 // 回 sum4 或 'a'？這裡回 'a' 告知上一層已完成一支
-    //                 char st[2]={'a','\0'}; fully_write(reply_write_fd, st, 2);
-    //             }
-    //         }
-    //     }
+                    // 回收 child
+                    int status = 0; waitpid(ch->L.pid, &status, 0);
+                    close(ch->L.read_fd); close(ch->L.write_fd);
+                }
+                // 清空 children list
+                while (children_head) {
+                    ChildNode* tmp = children_head->next;
+                    free(children_head);
+                    children_head = tmp;
+                }
+                children_count = 0;
+
+                if (!is_recursive) {
+                    // 把 total 回傳給父親（若有）
+                    if (!is_WHY(me->name)) {
+                        char val[5];
+                        int2fief(Value_sum, val);
+                        fully_write_str(reply_write_fd, val);
+                        close(reply_write_fd);
+                        close(cmd_read_fd);
+                        // 自己退出
+                        _exit(0);
+                    } else {
+                        // Revolt WHY：印結束訊息並結束
+                        print_finish();
+                        close(cmd_read_fd);
+                        _exit(0);
+                    }
+                } else {
+                    close(reply_write_fd);
+                    close(cmd_read_fd);
+                    _exit(0);
+                }
+            }                
+
+            // 我不是目標：往子女傳
+            bool found = false;
+            for (ChildNode *ch = children_head; ch; ch = ch->next) {
+                fully_write_str(ch->L.write_fd, line);
+                // child 若不是目標，會繼續傳；如果 target 在其子樹，他最終會把 sum4 回上來（遞迴路徑）
+                // 如果 target 不在其子樹，他回 'n'（STATUS）
+                // 這裡我們容忍兩種：先讀兩 bytes看是不是 'n\0'，不是的話就當作 sum4，其餘用 exact 讀
+                if (strcmp(target, ch->L.name) == 0) {
+                    char add_value[5];
+                    fully_read_str(ch->L.read_fd, add_value, 5);
+                    int value = atoi(add_value);
+                    me->fief_size += value;
+                    int status = 0;
+                    waitpid(ch->L.pid, &status, 0);
+                    // close(ch->L.read_fd); close(ch->L.write_fd);
+                    children_remove_by_pid(ch->L.pid, &children_count); // 從 list 移除
+                    // if (children_head) {
+                    //     printf("Childhead is not NULL\n");
+                    //     // printf(children_head->L.name);
+                    //     printf("%d\n", children_count);
+                    // } else {
+                    //     printf("Null\n");
+                    // }
+                    // printf("Direct find child\n");
+                    found = true;
+                    break;
+                }
+                char first2[2];
+                fully_read_str(ch->L.read_fd, first2, 2);
+                // printf("I reaceived my child messeage!\n");
+                // printf("%s\n", first2);
+                if (first2[0] == 'n' && first2[1] == '\0') {
+                    continue; // 該分支沒有
+                } else if (first2[0] == 'f' && first2[1] == '\0') {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                if (is_WHY(me->name)) {
+                    // 找不到
+                    print_fail_not_exist(target);
+                }
+                // 回報 'n'
+                if (!is_WHY(me->name)) {
+                    char st[2] = {'n', '\0'}; 
+                    fully_write_str(reply_write_fd, st);
+                }
+            } else {
+                // 我收到 sum 並完成加回，如果我也被 r-Rev- 要結束，會在上層處理
+                if (!is_WHY(me->name)) {
+                    // 回 sum4 或 'a'？這裡回 'a' 告知上一層已完成一支
+                    char st[2] = {'f','\0'};
+                    // printf("I write to parent!\n");
+                    fully_write_str(reply_write_fd, st);
+                    // printf("I already write to parent!\n");
+                }
+            }
+        }
+        
     //     // -----------------------------
     //     // (5) CONQUER（必用 FIFO）
     //     // -----------------------------
+
     //     else if (strcmp(P.cmd,"Conquer")==0) {
     //         // 完整版流程很長，受篇幅限制，這裡給出骨架與關鍵操作
     //         char A[MAX_LORD_NAME_LEN], B[MAX_LORD_NAME_LEN];
