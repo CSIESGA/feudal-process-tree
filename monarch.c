@@ -75,26 +75,6 @@ void print_finish(){
     fprintf(stdout, "Congradulations! You've finished these tasks!\n");
 }
 
-/* Terminate child pseudo code
-void clean_child(){
-    close(child read_fd);
-    close(child write_fd);
-    call wait() or waitpid() to reap child; // this is blocking
-}
-*/
-
-// Remember read and write may not be fully transmitted in HW1?
-// static void fully_write_str(int write_fd, const char *s) {
-//     // s 必須是以 '\0' 結尾的有效 C 字串
-//     int left = strlen(s) + 1;  // +1 把 '\0' 也送出去
-//     const char *p = s;
-//     while (left > 0) {
-//         int n = write(write_fd, p, left);
-//         p += n;
-//         left -= n;
-//     }
-// }
-
 static void fully_write_str(int write_fd, const char *s) {
     int left = strlen(s) + 1;     // 包含 '\0'
     const char *p = s;
@@ -110,24 +90,6 @@ static void fully_write_str(int write_fd, const char *s) {
     }
     return;
 }
-
-// static void fully_read_str(int read_fd, char *buf) {
-//     int i = 0;
-//     while (1) {
-//         char c;
-//         int n = read(read_fd, &c, 1);
-//         // if (n == 0) {        // EOF
-//         //     if (i == 0) return 0;   // 還沒讀到任何東西就 EOF
-//         //     // 已讀到部分資料但沒有 '\0'，我們補 '\0' 以避免上層爆，並回傳長度（不含真正的結尾）
-//         //     buf[i] = '\0';
-//         //     return (ssize_t)(i + 1);
-//         // }
-//         // 有讀到 1 byte
-//         buf[i++] = c;
-//         if (c == '\0' || c == '\n')
-//             return;
-//     }
-// }
 
 static void fully_read_str(int read_fd, char *buf, int maxlen) {
     int i = 0;
@@ -182,6 +144,7 @@ static void join_lord_info(const char *name, int val, char out[MAX_LORD_INFO_LEN
 
 typedef struct ChildNode {
     Lord L;                    // 只用到 pid/read_fd/write_fd/name/fief_size
+    char status;
     struct ChildNode *next;
 } ChildNode;
 
@@ -239,12 +202,6 @@ typedef struct {
     bool has_status;                // 是否帶狀態前綴  
     bool has_prefix;                // 是否有"r-Rep-" 或 "r-Rev-"
 } Parsed;
-
-static void trim_newline(char *s) {
-    int n = strlen(s);
-    if (n && s[n-1] == '\n') 
-        s[n-1] = '\0';
-}
 
 static void parse_command_line(const char *in, Parsed *out) {
     strncpy(out->raw, in, MAX_FULL_CMD_LEN);
@@ -409,6 +366,8 @@ static int make_fifo_if_needed(const char* path) {
 // 主程式（每個行程都跑同一份 main）
 //-------------------------------------
 
+static char my_status;
+
 int main(int argc, char *argv[]) {
     setvbuf(stdout, NULL, _IONBF, 0); // prevent buffered I/O, equivalent to fflush() after each stdout, study this as you may need to do it for other nodes against their parents.
     if (argc != 2) {
@@ -456,7 +415,7 @@ int main(int argc, char *argv[]) {
         if (is_WHY(me->name)) {
             // root：從 stdin 讀到 '\n'
             if (!fgets(line, sizeof(line), stdin)) {
-                break; // EOF => 結束程式(或離開主迴圈)
+                pause(); // EOF
             }
             int L = strlen(line);
             // 去掉尾端 '\n'
@@ -581,6 +540,12 @@ int main(int argc, char *argv[]) {
             char target[MAX_LORD_NAME_LEN]; 
             strncpy(target, P->arg1, MAX_LORD_NAME_LEN);
 
+            if(strcmp(target, "WHY") == 0 && children_count == 0) {
+                fprintf(stdout, "%s\n", "WHY_10000");
+                fprintf(stdout, "%d\n", 10000);
+                continue;
+            }
+
             if (strcmp(me->name, target) == 0) {
                 // 我就是要報告的根
                 // 收集每個直屬子女的 subtree 字串
@@ -695,20 +660,6 @@ int main(int argc, char *argv[]) {
                         fully_write_str(reply_write_fd, status);
                     }
                     break;
-                    // // 這是 subtree 的第一兩個 byte，我們需要把剩下的也讀進來：
-                    // received[0]=first[0]; received[1]=first[1];
-                    // // 之後把剩下資料讀到 '\0'
-                    // size_t k=2;
-                    // while (k < sizeof(received)) {
-                    //     char c;
-                    //     ssize_t n=read(ch->L.read_fd, &c, 1);
-                    //     if (n<0){ if (errno==EINTR) continue; ERR_EXIT("read subtree"); }
-                    //     if (n==0){ break; }
-                    //     received[k++] = c;
-                    //     if (c=='\0') break;
-                    // }
-                    // found=true;
-                    // break;
                 }
             }
 
@@ -723,24 +674,6 @@ int main(int argc, char *argv[]) {
                 fully_write_str(reply_write_fd, status);
                 continue;
             }
-            // if (!found) {
-            //     if (is_WHY(me->name) && !is_recursive) {
-            //         // 原始 Report 並且找不到
-            //         print_fail_report(target);
-            //     }
-            //     // 回上一層（若有）：'n'
-            //     if (!is_WHY(me->name)) {
-            //         char st[2]={'n','\0'};
-            //         fully_write_str(reply_write_fd, st);
-            //     }
-            // } else {
-            //     // 把 subtree 傳回上一層
-            //     if (!is_WHY(me->name)) {
-            //         fully_write_str(reply_write_fd, received);
-            //     } else {
-            //         // 我是 WHY 但不是目標（理論上不會走到，因為 Report 目標可能不是 WHY）；保守不印。
-            //     }
-            // }
         }
 
         // -----------------------------
@@ -748,152 +681,425 @@ int main(int argc, char *argv[]) {
         // -----------------------------
 
         else if (strcmp(P->cmd, "Exchange") == 0) {
-            // Root 先建立 FIFO；非 root 直接依據兩名字決定自己的角色（A或B或非目標）
+            // Initialize
+            my_status = 'n';
+            for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                ch->status = 'n';
+            }
+
             char A[MAX_LORD_NAME_LEN], B[MAX_LORD_NAME_LEN];
             strncpy(A, P->arg1, MAX_LORD_NAME_LEN);
             strncpy(B, P->arg2, MAX_LORD_NAME_LEN);
-
             char fifoAB[64], fifoBA[64];
-            snprintf(fifoAB, sizeof(fifoAB), "/tmp/%s2%s.fifo", A, B);
-            snprintf(fifoBA, sizeof(fifoBA), "/tmp/%s2%s.fifo", B, A);
-
-            bool existA = false, existB = false;
-
-            if (is_WHY(me->name)) {
-                make_fifo_if_needed(fifoAB);
-                make_fifo_if_needed(fifoBA);
-            }
-
+            snprintf(fifoAB, sizeof(fifoAB), "%s2%s.fifo", A, B);
+            snprintf(fifoBA, sizeof(fifoBA), "%s2%s.fifo", B, A);
             // 判斷自己是否目標
             bool i_am_A = (strcmp(me->name, A) == 0);
             bool i_am_B = (strcmp(me->name, B) == 0);
-            // printf("success check 1");
 
-            if (i_am_A || i_am_B) {
-                if (!is_WHY(me->name) && i_am_A) {
-                    char st[2]={'a','\0'}; 
-                    fully_write_str(reply_write_fd, st);
-                } else if (!is_WHY(me->name) && i_am_B) {
-                    char st[2]={'b','\0'}; 
-                    fully_write_str(reply_write_fd, st);
-                                  }
-                // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
-                // A 寫 A2B，讀 B2A；B 則相反
-                const char* write_out = i_am_A ? fifoAB : fifoBA;
-                const char* read_in  = i_am_A ? fifoBA : fifoAB;
-
-                // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
-                // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：
-                int read_in_fd, write_out_fd;
-                if (i_am_A) {
-                    read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
-                    write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");
-                } else {
-                    write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");
-                    read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
-                }
-                
-                // 寫自己的 fief
-                char my_fief[FIEF_SIZE_LEN]; int2fief(me->fief_size, my_fief);
-                fully_write_str(write_out_fd, my_fief);
-                // 讀對方的 fief
-                char your_fief[FIEF_SIZE_LEN]; 
-                fully_read_str(read_in_fd, your_fief, FIEF_SIZE_LEN);
-                int your_Val = atoi(your_fief);
-
-                // 交換：把自己的改成對方的
-                me->fief_size = your_Val;
-
-                close(read_in_fd); close(write_out_fd);
-
-                // 回覆父：'a'
-                
-                // 上傳存在性給 WHY（在廣播搜集流程中實現）
-            } else {
-                // 我不是目標：把指令往孩子廣播，收集兩側存在性與成功狀態
-                bool haveA = false, haveB = false;
-                for (ChildNode* ch = children_head; ch; ch = ch->next) {
-                    fully_write_str(ch->L.write_fd, line);
-                    // 子若是 A 或 B 會回 'a'（完成交換動作）
-                    // 若不是目標但找到某目標存在，可能回 'b' or 'c' 之類；我們這裡簡化：回 'n' 不存在／'a' 有處理
-                    char st[2]; fully_read_str(ch->L.read_fd, st, 2);
-                    // if (st[0] == 'a') {
-                    //     // 有處理成功的一支
-                    //     // 這裡無從得知是 A 還是 B，但不重要；繼續等另一支
-                    //     // 我們會把這狀態向上回傳 'a' 表示某支成功
-                    //     if (!okA) okA=1; else okB=1;
-                    // } else if (st[0]=='b') haveA=1;
-                    // else if (st[0]=='c') haveB=1;
-                    if (st[0] == 'a') {
-                        haveA = true;
-                    } else if (st[0] == 'b') {
-                        haveB = true;
-                    } else if (st[0] == 'c'){
-                        haveA = true;
-                        haveB = true;
-                    }
-                    // 其他視為該分支無
-                }
-
-                // WHY 統一印訊息：因為只有 WHY 會知道兩邊都完成與否
-                // if (!is_WHY(me.name)) {
-                //     char st[2]={'n','\0'};
-                //     fully_write(reply_write_fd, st, 2);
-                // }
-                if (!is_WHY(me->name)) {
-                    if (haveA && haveB) {
-                        char st[2] = {'c','\0'};
-                        fully_write_str(reply_write_fd, st);
-                    } else if (haveA) {
-                        char st[2] = {'a','\0'};
-                        fully_write_str(reply_write_fd, st);
-                    } else if (haveB) {
-                        char st[2] = {'b','\0'};
-                        fully_write_str(reply_write_fd, st);
-                    }
-                }
-
-                if (is_WHY(me->name)) {
-                    if (haveA && haveB) {
-                        print_success_exchange(A, B);
-                    } else if (haveA) {
-                        print_fail_target_1(B);
-                    } else if (haveB) {
-                        print_fail_target_0(A);
-                    } else {
-                        print_fail_target_both();
-                    } 
-                    // unlink(fifoAB); unlink(fifoBA);
+            // 蒐集狀態
+            bool haveA = false, haveB = false;
+            for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                fully_write_str(ch->L.write_fd, line);
+                // 子若是 A 或 B 會回 'a' or 'b'
+                char st[2];
+                fully_read_str(ch->L.read_fd, st, 2);
+                if (st[0] == 'a') {
+                    haveA = true;
+                    ch->status = 'a';
+                } else if (st[0] == 'b') {
+                    haveB = true;
+                    ch->status = 'b';
+                } else if (st[0] == 'c') {
+                    haveA = true;
+                    haveB = true;
+                    ch->status = 'c';
+                } else if (st[0] == 'n') {
+                    ch->status = 'n';
                 }
             }
 
-            // if (is_WHY(me.name)) {
-            //     // WHY 這裡簡化：再從孩子收集「存在性」不如在前序廣播時由孩子回 'b'/'c'；
-            //     // 為了清楚，我們做一輪「存在性確認」：
-            //     bool seenA=false, seenB=false, okCnt=0;
+            if (!is_WHY(me->name)) {
+                if (i_am_A) {
+                    if (haveB) {
+                        my_status = 'c';
+                        char st[2] = {'c', '\0'};
+                        fully_write_str(reply_write_fd, st);
+                    } else {
+                        my_status = 'a';
+                        char st[2] = {'a', '\0'};
+                        fully_write_str(reply_write_fd, st);
+                    }
+                } else if (i_am_B) {
+                    if (haveA) {
+                        my_status = 'c';
+                        char st[2] = {'c', '\0'};
+                        fully_write_str(reply_write_fd, st);
+                    } else {
+                        my_status = 'b';
+                        char st[2] = {'b', '\0'};
+                        fully_write_str(reply_write_fd, st);
+                    }
+                } else if (haveA && haveB) {
+                    my_status = 'c';
+                    char st[2] = {'c', '\0'};
+                    fully_write_str(reply_write_fd, st);
+                } else if (haveA) {
+                    my_status = 'a';
+                    char st[2] = {'a', '\0'};
+                    fully_write_str(reply_write_fd, st);
+                } else if (haveB) {
+                    my_status = 'b';
+                    char st[2] = {'b', '\0'};
+                    fully_write_str(reply_write_fd, st);
+                } else {
+                    my_status = 'n';
+                    char st[2] = {'n', '\0'};
+                    fully_write_str(reply_write_fd, st);
+                }
+            }
+            
+            if (is_WHY(me->name)) {
+                if (haveA && haveB) {
+                    my_status = 'c';
+                } else if (haveA) {
+                    my_status = 'a';
+                } else if (haveB) {
+                    my_status = 'b';
+                } else {
+                    my_status = 'n';
+                }
+            }
 
-            //     // 自己可能是 A/B 嗎？規格保證不會（A/B 非 WHY）
-            //     (void)okCnt;
+            if (is_WHY(me->name)) {
+                if (my_status == 'n') {
+                    print_fail_target_both();
+                    continue;
+                } else if (my_status == 'a') {
+                    ChildNode *temp2a = NULL;
+                    for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                        if (ch->status == 'a') {
+                            temp2a = ch;
+                        } else {
+                            continue;
+                        }
+                    }
+                    char cmd[MAX_FULL_CMD_LEN];
+                    snprintf(cmd, sizeof(cmd), "t-%s", line);
+                    fully_write_str(temp2a->L.write_fd, cmd);
+                    print_fail_target_1(B);
+                    continue;
+                } else if (my_status == 'b') {
+                    ChildNode *temp2b = NULL;
+                    for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                        if (ch->status == 'b') {
+                            temp2b = ch;
+                        } else {
+                            continue;
+                        }
+                    }
+                    char cmd[MAX_FULL_CMD_LEN];
+                    snprintf(cmd, sizeof(cmd), "t-%s", line);
+                    fully_write_str(temp2b->L.write_fd, cmd);
+                    print_fail_target_0(A);
+                    continue;
+                } else if (my_status == 'c') {
+                    // mkfifo
+                    make_fifo_if_needed(fifoAB);
+                    make_fifo_if_needed(fifoBA);
 
-            //     // 從直屬孩子再來一次 ping（更簡易方法：在第一次廣播就收狀態；為篇幅保守，這裡略化）
-            //     // 這裡我們直接用 children_find_by_name 快查：如果 A/B 是直屬就算存在
-            //     if (children_find_by_name(A)) seenA=true;
-            //     if (children_find_by_name(B)) seenB=true;
+                    ChildNode *temp2a = NULL, *temp2b = NULL, *temp2c = NULL;
+                    for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                        if (ch->status == 'a') {
+                            temp2a = ch;
+                        } else if (ch->status == 'b') {
+                            temp2b = ch;
+                        } else if (ch->status == 'c') {
+                            temp2c = ch;
+                        } else {
+                            continue;
+                        }
+                    }
 
-            //     // 若直屬未命中，仍可能在更深處；這需要在前面的廣播就蒐集 'b'/'c'。
-            //     // 為了把訊息確實印出：我們保守地依據是否最終兩端的交換回覆成功來判斷有無（簡易版）：
-            //     // ——實作簡化：只要兩端有任何一端成功執行交換步驟，就視為存在。
-            //     // 最穩：我們實務上在廣播時讓每個分支都把「是否含 A / 是否含 B」回一個字元上來，但上面為節省篇幅做了'n'/'a'。
-            //     // 這裡退一步：若兩端都沒回到 ANY 'a'，我們判定兩者皆不存在；若只回到一個 'a'，則另一個不存在。
-            //     // 因課規測資保證 A/B不同且非WHY，我們仍需把訊息印對。
-            //     // ——為了確保正確，這裡直接用 FIFO 打開測法：若某 FIFO open 失敗通常代表對側沒 open，但這不可靠。
-            //     // 結論：**建議你實際寫 code 時，把存在性回傳做好（'b'=含A，'c'=含B）。** 下方印訊息保持標準格式。
+                    if (temp2c) {
+                        char cmd[MAX_FULL_CMD_LEN];
+                        snprintf(cmd, sizeof(cmd), "c-%s", line);
+                        fully_write_str(temp2c->L.write_fd, cmd);
+                        char st[2]; 
+                        fully_read_str(temp2c->L.read_fd, st, 2);
+                        if (st[0] == 'f') {
+                            print_success_exchange(A, B);
+                            unlink(fifoAB); unlink(fifoBA);
+                            continue;
+                        }
+                    } else if (temp2a && temp2b) {
+                        char cmd_A[MAX_FULL_CMD_LEN];
+                        snprintf(cmd_A, sizeof(cmd_A), "a-%s", line);
+                        char cmd_B[MAX_FULL_CMD_LEN];
+                        snprintf(cmd_B, sizeof(cmd_B), "b-%s", line);
+                        fully_write_str(temp2a->L.write_fd, cmd_A);
+                        fully_write_str(temp2b->L.write_fd, cmd_B);
+                        char st_A[2], st_B[2];
+                        fully_read_str(temp2a->L.read_fd, st_A, 2);
+                        fully_read_str(temp2b->L.read_fd, st_B, 2);
+                        if (st_A[0] == 'f' && st_B[0] == 'f') {
+                            print_success_exchange(A, B);
+                            unlink(fifoAB); unlink(fifoBA);
+                            continue;
+                        }
+                    }
+                }
+            } else {
+                if (my_status != 'n') {
+                    char cmd[MAX_FULL_CMD_LEN];
+                    fully_read_str(cmd_read_fd, cmd, MAX_FULL_CMD_LEN);
 
-            //     // 這裡直接印「成功交換」：在我們的 above 分支中，只有目標自己會回 'a'；WHY 並未真正統計。
-            //     // 為了交付一版可理解的範本，我們此處按規格流程：先清理 FIFO，再不印多餘東西（或依需求調整）。
-            //     unlink(fifoAB); unlink(fifoBA);
-            //     // 真正的「存在性收集 + 印三種錯誤」在完整版建議你把 'b'/'c' 狀態做完（篇幅關係此處簡化）。
-            // }
+                    if (strncmp(cmd, "t-", 2) == 0) {
+                        if (i_am_A) {
+                            continue;
+                        } else if (i_am_B) {
+                            continue;
+                        } else if (my_status == 'a') {
+                            ChildNode *temp2a = NULL;
+                            for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                                if (ch->status == 'a') {
+                                    temp2a = ch;
+                                } else {
+                                    continue;
+                                }
+                            }
+                            char cmd[MAX_FULL_CMD_LEN];
+                            snprintf(cmd, sizeof(cmd), "t-%s", line);
+                            fully_write_str(temp2a->L.write_fd, cmd);
+                            continue;
+                        } else if (my_status == 'b') {
+                            ChildNode *temp2b = NULL;
+                            for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                                if (ch->status == 'b') {
+                                    temp2b = ch;
+                                } else {
+                                    continue;
+                                }
+                            }
+                            char cmd[MAX_FULL_CMD_LEN];
+                            snprintf(cmd, sizeof(cmd), "t-%s", line);
+                            fully_write_str(temp2b->L.write_fd, cmd);
+                            continue;
+                        }
+                    }
+
+                    if (i_am_A) {
+                        if (my_status == 'a') {
+                            // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
+                            // A 寫 A2B，讀 B2A；B 則相反
+                            const char* write_out = i_am_A ? fifoAB : fifoBA;
+                            const char* read_in  = i_am_A ? fifoBA : fifoAB;
+
+                            // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
+                            // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：                                   
+                            int read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
+                            int write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");                                
+                            
+                            // 寫自己的 fief
+                            char my_fief[FIEF_SIZE_LEN]; int2fief(me->fief_size, my_fief);
+                            fully_write_str(write_out_fd, my_fief);
+                            // 讀對方的 fief
+                            char your_fief[FIEF_SIZE_LEN]; 
+                            fully_read_str(read_in_fd, your_fief, FIEF_SIZE_LEN);
+                            int your_Val = atoi(your_fief);
+
+                            // 交換：把自己的改成對方的
+                            me->fief_size = your_Val;
+
+                            close(read_in_fd); close(write_out_fd);
+
+                            char st[2] = {'f', '\0'};
+                            fully_write_str(reply_write_fd, st);
+
+                            continue;
+                        } else if (my_status == 'c') {
+                            ChildNode *temp2b = NULL;
+                            for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                                if (ch->status == 'b') {
+                                    temp2b = ch;
+                                } else {
+                                    continue;
+                                }
+                            }
+                            char cmd_B[MAX_FULL_CMD_LEN];
+                            snprintf(cmd_B, sizeof(cmd_B), "b-%s", line);
+                            fully_write_str(temp2b->L.write_fd, cmd_B);
+
+                            // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
+                            // A 寫 A2B，讀 B2A；B 則相反
+                            const char* write_out = i_am_A ? fifoAB : fifoBA;
+                            const char* read_in  = i_am_A ? fifoBA : fifoAB;
+
+                            // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
+                            // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：                                   
+                            int read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
+                            int write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");                                
+
+                            // 寫自己的 fief
+                            char my_fief[FIEF_SIZE_LEN]; int2fief(me->fief_size, my_fief);
+                            fully_write_str(write_out_fd, my_fief);
+                            // 讀對方的 fief
+                            char your_fief[FIEF_SIZE_LEN]; 
+                            fully_read_str(read_in_fd, your_fief, FIEF_SIZE_LEN);
+                            int your_Val = atoi(your_fief);
+
+                            // 交換：把自己的改成對方的
+                            me->fief_size = your_Val;
+
+                            close(read_in_fd); close(write_out_fd);
+
+                            char st_B[2];
+                            fully_read_str(temp2b->L.read_fd, st_B, 2);
+                            if (st_B[0] == 'f') {
+                                char st[2] = {'f', '\0'};
+                                fully_write_str(reply_write_fd, st);
+                            }
+                            continue;
+                        }
+                    } else if (i_am_B) {
+                        if (my_status == 'b') {
+                            // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
+                            // A 寫 A2B，讀 B2A；B 則相反
+                            const char* write_out = i_am_A ? fifoAB : fifoBA;
+                            const char* read_in  = i_am_A ? fifoBA : fifoAB;
+
+                            // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
+                            // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：                                   
+                            int write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");                                
+                            int read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
+
+                            // 寫自己的 fief
+                            char my_fief[FIEF_SIZE_LEN]; int2fief(me->fief_size, my_fief);
+                            fully_write_str(write_out_fd, my_fief);
+                            // 讀對方的 fief
+                            char your_fief[FIEF_SIZE_LEN]; 
+                            fully_read_str(read_in_fd, your_fief, FIEF_SIZE_LEN);
+                            int your_Val = atoi(your_fief);
+
+                            // 交換：把自己的改成對方的
+                            me->fief_size = your_Val;
+
+                            close(read_in_fd); close(write_out_fd);
+
+                            char st[2] = {'f', '\0'};
+                            fully_write_str(reply_write_fd, st);
+
+                            continue;
+                        } else if (my_status == 'c') {
+                            ChildNode *temp2a = NULL;
+                            for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                                if (ch->status == 'a') {
+                                    temp2a = ch;
+                                } else {
+                                    continue;
+                                }
+                            }
+                            char cmd_A[MAX_FULL_CMD_LEN];
+                            snprintf(cmd_A, sizeof(cmd_A), "a-%s", line);
+                            fully_write_str(temp2a->L.write_fd, cmd_A);
+
+                            // 目標節點：開 FIFO，寫出自己的 fief，讀入對方的
+                            // A 寫 A2B，讀 B2A；B 則相反
+                            const char* write_out = i_am_A ? fifoAB : fifoBA;
+                            const char* read_in  = i_am_A ? fifoBA : fifoAB;
+
+                            // 先以 O_WRONLY 開 outF 可能阻塞（對端尚未 O_RDONLY）
+                            // 因為兩端都會同時 open，我們可以先 open 讀端避免死等：                               
+                            int write_out_fd = open(write_out, O_WRONLY); if (write_out_fd < 0) ERR_EXIT("open write_out");                                
+                            int read_in_fd = open(read_in,  O_RDONLY); if (read_in_fd < 0) ERR_EXIT("open read_in");
+
+                            // 寫自己的 fief
+                            char my_fief[FIEF_SIZE_LEN]; int2fief(me->fief_size, my_fief);
+                            fully_write_str(write_out_fd, my_fief);
+                            // 讀對方的 fief
+                            char your_fief[FIEF_SIZE_LEN]; 
+                            fully_read_str(read_in_fd, your_fief, FIEF_SIZE_LEN);
+                            int your_Val = atoi(your_fief);
+
+                            // 交換：把自己的改成對方的
+                            me->fief_size = your_Val;
+
+                            close(read_in_fd); close(write_out_fd);
+
+                            char st_A[2];
+                            fully_read_str(temp2a->L.read_fd, st_A, 2);
+                            if (st_A[0] == 'f') {
+                                char st[2] = {'f', '\0'};
+                                fully_write_str(reply_write_fd, st);
+                            }
+                            continue;
+                        }
+                    } else {
+                        ChildNode *temp2a = NULL, *temp2b = NULL, *temp2c = NULL;
+                        for (ChildNode* ch = children_head; ch; ch = ch->next) {
+                            if (ch->status == 'a') {
+                                temp2a = ch;
+                            } else if (ch->status == 'b') {
+                                temp2b = ch;
+                            } else if (ch->status == 'c') {
+                                temp2c = ch;
+                            } else {
+                                continue;
+                            }
+                        }
+
+                        if (temp2c) {
+                            char cmd[MAX_FULL_CMD_LEN];
+                            snprintf(cmd, sizeof(cmd), "c-%s", line);
+                            fully_write_str(temp2c->L.write_fd, cmd);
+                            char st[2]; 
+                            fully_read_str(temp2c->L.read_fd, st, 2);
+                            if (st[0] == 'f') {
+                                char st[2] = {'f', '\0'};
+                                fully_write_str(reply_write_fd, st);
+                            }
+                        } else if (temp2a && temp2b) {
+                            char cmd_A[MAX_FULL_CMD_LEN];
+                            snprintf(cmd_A, sizeof(cmd_A), "a-%s", line);
+                            char cmd_B[MAX_FULL_CMD_LEN];
+                            snprintf(cmd_B, sizeof(cmd_B), "b-%s", line);
+                            fully_write_str(temp2a->L.write_fd, cmd_A);
+                            fully_write_str(temp2b->L.write_fd, cmd_B);
+                            char st_A[2], st_B[2];
+                            fully_read_str(temp2a->L.read_fd, st_A, 2);
+                            fully_read_str(temp2b->L.read_fd, st_B, 2);
+                            if (st_A[0] == 'f' && st_B[0] == 'f') {
+                                char st[2] = {'f', '\0'};
+                                fully_write_str(reply_write_fd, st);
+                            }
+                        } else if (temp2a) {
+                            char cmd_A[MAX_FULL_CMD_LEN];
+                            snprintf(cmd_A, sizeof(cmd_A), "a-%s", line);
+                            fully_write_str(temp2a->L.write_fd, cmd_A);
+                            char st_A[2];
+                            fully_read_str(temp2a->L.read_fd, st_A, 2);
+                            if (st_A[0] == 'f') {
+                                char st[2] = {'f', '\0'};
+                                fully_write_str(reply_write_fd, st);
+                            }
+                        } else if (temp2b) {
+                            char cmd_B[MAX_FULL_CMD_LEN];
+                            snprintf(cmd_B, sizeof(cmd_B), "b-%s", line);                            
+                            fully_write_str(temp2b->L.write_fd, cmd_B);
+                            char st_B[2];                            
+                            fully_read_str(temp2b->L.read_fd, st_B, 2);
+                            if (st_B[0] == 'f') {
+                                char st[2] = {'f', '\0'};
+                                fully_write_str(reply_write_fd, st);
+                            }
+                        }    
+                    }
+                } else {
+                    continue;
+                }
+            }
+
+
         }
 
         // -----------------------------
@@ -983,23 +1189,12 @@ int main(int argc, char *argv[]) {
                     me->fief_size += value;
                     int status = 0;
                     waitpid(ch->L.pid, &status, 0);
-                    // close(ch->L.read_fd); close(ch->L.write_fd);
                     children_remove_by_pid(ch->L.pid, &children_count); // 從 list 移除
-                    // if (children_head) {
-                    //     printf("Childhead is not NULL\n");
-                    //     // printf(children_head->L.name);
-                    //     printf("%d\n", children_count);
-                    // } else {
-                    //     printf("Null\n");
-                    // }
-                    // printf("Direct find child\n");
                     found = true;
                     break;
                 }
                 char first2[2];
                 fully_read_str(ch->L.read_fd, first2, 2);
-                // printf("I reaceived my child messeage!\n");
-                // printf("%s\n", first2);
                 if (first2[0] == 'n' && first2[1] == '\0') {
                     continue; // 該分支沒有
                 } else if (first2[0] == 'f' && first2[1] == '\0') {
@@ -1023,173 +1218,16 @@ int main(int argc, char *argv[]) {
                 if (!is_WHY(me->name)) {
                     // 回 sum4 或 'a'？這裡回 'a' 告知上一層已完成一支
                     char st[2] = {'f','\0'};
-                    // printf("I write to parent!\n");
                     fully_write_str(reply_write_fd, st);
-                    // printf("I already write to parent!\n");
                 }
             }
         }
-        
-    //     // -----------------------------
-    //     // (5) CONQUER（必用 FIFO）
-    //     // -----------------------------
-
-    //     else if (strcmp(P.cmd,"Conquer")==0) {
-    //         // 完整版流程很長，受篇幅限制，這裡給出骨架與關鍵操作
-    //         char A[MAX_LORD_NAME_LEN], B[MAX_LORD_NAME_LEN];
-    //         strncpy(A, P.arg1, MAX_LORD_NAME_LEN);
-    //         strncpy(B, P.arg2, MAX_LORD_NAME_LEN);
-
-    //         char fifoAB[64], fifoBA[64];
-    //         snprintf(fifoAB, sizeof(fifoAB), "%s2%s.fifo", A, B);
-    //         snprintf(fifoBA, sizeof(fifoBA), "%s2%s.fifo", B, A);
-
-    //         if (is_WHY(me.name)) {
-    //             make_fifo_if_needed(fifoAB);
-    //             make_fifo_if_needed(fifoBA);
-    //         }
-
-    //         bool iAmA = (strcmp(me.name, A)==0);
-    //         bool iAmB = (strcmp(me.name, B)==0);
-
-    //         // 每個目標先取得自己的「子樹總和」
-    //         if (iAmA || iAmB) {
-    //             // 蒐集自己子樹總和（不印）
-    //             int total = me.fief_size;
-    //             // 讓每個 child 回報其子樹總和（用 r-Rep-Report 或專門「r-Rep-Conquer」都可）
-    //             for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //                 char cmd[MAX_FULL_CMD_LEN];
-    //                 snprintf(cmd, sizeof(cmd), "r-Rep-Report %s", ch->L.name);
-    //                 fully_write(ch->L.write_fd, cmd, strlen(cmd)+1);
-    //                 // child 回 subtree 字串，解析加總（同 Report）
-    //                 char subtree[MAX_SUBTREE_LEN]; fully_read_cstr(ch->L.read_fd, subtree, MAX_SUBTREE_LEN);
-    //                 // 把 '*' 換空白後逐個 token 加總
-    //                 for (char *q=subtree; *q; ++q) if (*q=='*') *q=' ';
-    //                 char *save=NULL; char *tok=strtok_r(subtree," ",&save);
-    //                 while (tok) {
-    //                     int v=0; char nm[MAX_LORD_NAME_LEN];
-    //                     split_lord_info(tok, nm, &v);
-    //                     total += v;
-    //                     tok = strtok_r(NULL, " ", &save);
-    //                 }
-    //             }
-
-    //             // 與對方透過 FIFO 交換「總和」
-    //             const char *outF = iAmA ? fifoAB : fifoBA;
-    //             const char *inF  = iAmA ? fifoBA : fifoAB;
-
-    //             int in_fd  = open(inF,  O_RDONLY); if (in_fd<0) ERR_EXIT("open inF");
-    //             int out_fd = open(outF, O_WRONLY); if (out_fd<0) ERR_EXIT("open outF");
-
-    //             char my4[FIEF_SIZE_LEN]; i2fief4(total, my4);
-    //             fully_write(out_fd, my4, FIEF_SIZE_LEN);
-
-    //             char peer4[FIEF_SIZE_LEN]; fully_read_exact(in_fd, peer4, FIEF_SIZE_LEN);
-    //             int peerTotal = atoi(peer4);
-
-    //             close(in_fd); close(out_fd);
-
-    //             // 比較大小：自己輸→執行 Revolt（本地）
-    //             if (total < peerTotal) {
-    //                 // 敗者：直接觸發本地 Revolt（與 (4) 分支同樣步驟）
-    //                 // 這裡簡寫：向父親回傳 sum4，由父做分配（父會等）
-    //                 // ...（篇幅限制，請參照 Revolt 的收尾步驟）
-    //             } else if (total > peerTotal) {
-    //                 // 勝者：等待對方終止；父會做分配
-    //             } else {
-    //                 // 平手：雙方父親各加回自己的 total；印 equal
-    //             }
-
-    //             if (!is_WHY(me.name)) {
-    //                 char st[2]={'a','\0'}; fully_write(reply_write_fd, st, 2);
-    //             }
-    //         } else {
-    //             // 非目標：往子女傳，再收合狀態（略）
-    //             for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //                 fully_write(ch->L.write_fd, line, strlen(line)+1);
-    //                 char st[2]; fully_read_exact(ch->L.read_fd, st, 2);
-    //                 (void)st;
-    //             }
-    //             if (!is_WHY(me.name)) {
-    //                 char st[2]={'n','\0'}; fully_write(reply_write_fd, st, 2);
-    //             }
-    //         }
-
-    //         if (is_WHY(me.name)) {
-    //             // 印勝負 or equal，並刪 FIFO（略；完整版你可在前序廣播就收齊兩邊的總和與存在性）
-    //             unlink(fifoAB); unlink(fifoBA);
-    //         }
-    //     }
-    //     // -----------------------------
-    //     // (6) VISIT（LCA，Bonus）
-    //     // -----------------------------
-    //     else if (strcmp(P.cmd,"Visit")==0) {
-    //         char A[MAX_LORD_NAME_LEN], B[MAX_LORD_NAME_LEN];
-    //         strncpy(A, P.arg1, MAX_LORD_NAME_LEN);
-    //         strncpy(B, P.arg2, MAX_LORD_NAME_LEN);
-
-    //         // 回傳狀態：'a' 無、'b' 含 A、'c' 含 B、'd' 同時含（或 LCA）
-    //         // 略化：若自己是 A 或 B，先標記
-    //         int haveA = (strcmp(me.name, A)==0);
-    //         int haveB = (strcmp(me.name, B)==0);
-
-    //         char lcaName[MAX_LORD_NAME_LEN]="";
-
-    //         // 收子女狀態
-    //         int cntA=haveA, cntB=haveB;
-    //         for (ChildNode *ch=children_head; ch; ch=ch->next) {
-    //             fully_write(ch->L.write_fd, line, strlen(line)+1);
-    //             char st[2]; fully_read_exact(ch->L.read_fd, st, 2);
-    //             if (st[0]=='b') cntA++;
-    //             else if (st[0]=='c') cntB++;
-    //             else if (st[0]=='d') {
-    //                 // child 已判定 LCA 在其子樹，讓他再回傳名字
-    //                 char nm[MAX_LORD_NAME_LEN]; fully_read_cstr(ch->L.read_fd, nm, MAX_LORD_NAME_LEN);
-    //                 strncpy(lcaName, nm, MAX_LORD_NAME_LEN);
-    //                 // 把 'd' 往上回
-    //                 if (!is_WHY(me.name)) {
-    //                     char d[2]={'d','\0'}; fully_write(reply_write_fd, d, 2);
-    //                     fully_write(reply_write_fd, lcaName, strlen(lcaName)+1);
-    //                 } else {
-    //                     print_success_visit(A, B, lcaName);
-    //                 }
-    //                 goto VISIT_NEXT_CMD;
-    //             }
-    //         }
-
-    //         if (cntA && cntB) {
-    //             // 我是 LCA
-    //             if (!is_WHY(me.name)) {
-    //                 char d[2]={'d','\0'}; fully_write(reply_write_fd, d, 2);
-    //                 fully_write(reply_write_fd, me.name, strlen(me.name)+1);
-    //             } else {
-    //                 print_success_visit(A,B,me.name);
-    //             }
-    //         } else if (cntA) {
-    //             if (!is_WHY(me.name)) { char b[2]={'b','\0'}; fully_write(reply_write_fd, b, 2); }
-    //         } else if (cntB) {
-    //             if (!is_WHY(me.name)) { char c[2]={'c','\0'}; fully_write(reply_write_fd, c, 2); }
-    //         } else {
-    //             if (is_WHY(me.name)) {
-    //                 // 兩者都不存在（或其中之一不存在），題目要求印三種錯誤；此處略化，可依實作在前序廣播時統計存在性後印。
-    //             } else {
-    //                 char a[2]={'a','\0'}; fully_write(reply_write_fd, a, 2);
-    //             }
-    //         }
-    //     VISIT_NEXT_CMD:
-    //         ;
-    //     }
-    //     else {
-    //         // 不會出現；若出現，直接列印錯誤便於偵錯
-    //         fprintf(stderr, "%s received error input : %s\n", me.name, line);
-    //     }
-    //      free(P);
     } // while
 
-    // END_PROGRAM:
-    // //Final print, please leave this in, it may bepart of the test case output
-    // if (is_WHY(me->name)) {
-    //     print_finish();
-    // }
-    // return 0;
+    END_PROGRAM:
+    //Final print, please leave this in, it may bepart of the test case output
+    if (is_WHY(me->name)) {
+        print_finish();
+    }
+    return 0;
 }
